@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
         core.createInputs(WSInputs.values());
         core.createOutputs(WSOutputs.values());
         core.createSubsystems(WSSubsystems.values());
-        core.createAutoPrograms(WSAutoPrograms.values());
         
         // create smart dashboard option for LogLevel
         logChooser = new SendableChooser<>();
