@@ -12,7 +12,7 @@ import org.wildstang.year2022.robot.WSOutputs;
  * Turns the intake motor on/off based on joystick button states
  * @author foxler2010
  */
-public class IntakeMotor implements Subsystem {
+public class Intake implements Subsystem {
 
     WsSparkMax motor;
     WsJoystickButton forwardTrigger;

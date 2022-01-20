@@ -1,7 +1,7 @@
 package org.wildstang.year2022.robot;
 
 import org.wildstang.framework.core.Subsystems;
-import org.wildstang.year2022.subsystems.IntakeMotor;
+import org.wildstang.year2022.subsystems.Intake;
 
 /**
  * All subsystems are enumerated here.
@@ -10,7 +10,7 @@ import org.wildstang.year2022.subsystems.IntakeMotor;
 public enum WSSubsystems implements Subsystems {
 
     // enumerate subsystems
-    INTAKE_MOTOR("Intake Motor", IntakeMotor.class),
+    INTAKE_MOTOR("Intake Motor", Intake.class),
     ;
 
     /**
