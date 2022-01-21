@@ -26,6 +26,7 @@ public class Piston implements Subsystem {
         solenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.PISTON_SOLENOID);
         //b button
         trigger = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_RIGHT);
+        trigger.addInputListener(this);
     }
 
     @Override
@@ -39,8 +40,6 @@ public class Piston implements Subsystem {
         if (source == trigger) {
             //set value to the opposite of what it was
             solenoid.setValue(!solenoid.getValue());
-            //tell the solenoid to mirror what its value is
-            solenoid.sendDataToOutput();
         }
     }
 
