@@ -28,7 +28,7 @@ public class Drive extends PathFollowingDrive {
 
     private WsSparkMax left, right;
     private WsAnalogInput throttleJoystick, headingJoystick;
-    private WsDigitalInput baseLock;
+    private WsDigitalInput baseLock, gyroReset;
     private DriveState state;
 
     private double heading;
@@ -50,6 +50,8 @@ public class Drive extends PathFollowingDrive {
         headingJoystick.addInputListener(this);
         baseLock = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_SHOULDER);
         baseLock.addInputListener(this);
+        gyroReset = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
+        gyroReset.addInputListener(this);
         resetState();
     }
 
@@ -61,19 +63,13 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void update() {
-        switch (state){
-            case TELEOP: 
-                signal = helper.teleopDrive(throttle, heading);
-                drive(signal);
-                break;
-            case BASELOCK:
-                left.setPosition(left.getPosition());
-                right.setPosition(right.getPosition());
-                break;
-            case AUTO:
-                break;
-        }
-
+        if (state == DriveState.TELEOP){
+            signal = helper.teleopDrive(throttle, heading);
+            drive(signal);
+        } else if (state == DriveState.BASELOCK){
+            left.setPosition(left.getPosition());
+            right.setPosition(right.getPosition());
+        } 
     }
 
     @Override
@@ -82,7 +78,7 @@ public class Drive extends PathFollowingDrive {
         throttle = 0.0;
         heading = 0.0;
         signal = new DriveSignal(0.0, 0.0);
-        gyro.reset();
+        //gyro.reset();
     }
 
     @Override
@@ -98,6 +94,10 @@ public class Drive extends PathFollowingDrive {
             state = DriveState.BASELOCK;
         } else {
             state = DriveState.TELEOP;
+        }
+        if (source == gyroReset && gyroReset.getValue()){
+            gyro.reset();
+            gyro.setAngleAdjustment(0.0);
         }
 
     }
@@ -148,6 +148,11 @@ public class Drive extends PathFollowingDrive {
         setupMotor.initClosedLoop(constants.p, constants.i, constants.d, constants.f);
         setupMotor.setCurrentLimit(80, 20, 10000);
         setupMotor.enableVoltageCompensation();
+    }
+
+    public void setGyro(double degrees){
+        gyro.reset();
+        gyro.setAngleAdjustment(degrees);
     }
 
 }
