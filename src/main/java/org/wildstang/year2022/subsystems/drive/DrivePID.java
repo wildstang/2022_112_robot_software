@@ -9,7 +9,7 @@ import org.wildstang.framework.pid.PIDConstants;
 public enum DrivePID {
     
     PATH_POS(0, new PIDConstants(0.0652,1.00,0.0,0.0)),
-    PATH_HEAD(1, new PIDConstants(0.0, 1.00, 0.0, 10)),
+    PATH_HEAD(1, new PIDConstants(0.0, 1.00, 0.0, 0.0)),
     BASE_LOCK(2, new PIDConstants(0.0, .8, 0.001, 10));
 
     private PIDConstants k;
