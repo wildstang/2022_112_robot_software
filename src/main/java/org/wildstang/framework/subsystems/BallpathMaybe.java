@@ -32,7 +32,7 @@ public class BallpathMaybe implements Subsystem {
     private WsSparkMax Wheel, Feed;
     private WsSolenoid Intake;
     private boolean wheelDirection, wheelRun, intakeDeploy, state;
-    private double feedSpeed, actualDirection, wheelSpeed;
+    private double feedSpeed, wheelSpeed;
     
 
  @Override
@@ -72,14 +72,12 @@ public void inputUpdate(Input Source){
     } 
     
     if(wheelDirection = true){
-        actualDirection = 1;
+        wheelSpeed = 1;
     }
 
     if(wheelDirection = false){
-        actualDirection = -1;
+        wheelSpeed = -1;
     }
-
-    wheelSpeed = actualDirection;
     
     if(wheelRun = false){
         wheelSpeed = 0;
@@ -90,7 +88,7 @@ public void inputUpdate(Input Source){
     }
 
     if(state = false){
-        feedSpeed = 0;
+        feedSpeed = 0; 
         wheelSpeed = 0;
         intakeDeploy = false;
     }
@@ -115,12 +113,11 @@ public void selfTest(){
 public void resetState() {
 
   feedSpeed = 0;
-  wheelSpeed = 0;
+  wheelSpeed= 0;
   intakeDeploy = false;
   wheelDirection = false;
   wheelRun = false;
   state = false;
-  actualDirection = 0;
 
 }
 
