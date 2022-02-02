@@ -49,6 +49,8 @@ public class BallpathMaybe implements Subsystem {
          Ybutton.addInputListener(this);
     Trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
+    
+    resetState();
 
 }
 
