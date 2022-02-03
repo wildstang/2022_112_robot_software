@@ -31,7 +31,7 @@ public class BallpathMaybe implements Subsystem {
     private WsAnalogInput Trigger;
     private WsSparkMax Wheel, Feed;
     private WsSolenoid Intake;
-    private boolean wheelDirection, wheelRun, intakeDeploy, state;
+    private boolean intakeDeploy;
     private double feedSpeed, wheelSpeed;
     
 
@@ -41,6 +41,7 @@ public class BallpathMaybe implements Subsystem {
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+
     Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
          Abutton.addInputListener(this);
     Xbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
@@ -60,41 +61,54 @@ public void inputUpdate(Input Source){
     boolean A = Abutton.getValue();
     boolean X = Xbutton.getValue();
     boolean Y = Ybutton.getValue();
-    double feedSpeed = Trigger.getValue();
+    double triggerValue = Trigger.getValue();
+
+    if (triggerValue > 0.05){
+        feedSpeed = triggerValue;
+    }    
+
+    else if(feedSpeed > 0.05){
+        feedSpeed = 0;
+    }
 
     if (A){
 
-        wheelRun = !wheelRun;
         intakeDeploy = !intakeDeploy;
+
+        if(wheelSpeed != 0){
+            wheelSpeed = 0;
+        }
+
+        else {
+            wheelSpeed = 1;
+        }
 
     }
 
     if (Y){
-        wheelDirection = !wheelDirection;
-    } 
-    
-    if(wheelDirection = true){
-        wheelSpeed = 1;
+        
+        if(wheelSpeed == 1){
+            wheelSpeed = -1;
+        }
+
+        else if(wheelSpeed == -1){
+            wheelSpeed = 1;
+        }
+
     }
 
-    if(wheelDirection = false){
-        wheelSpeed = -1;
-    }
-    
-    if(wheelRun = false){
-        wheelSpeed = 0;
-    }
 
     if(X){
-        state = !state;
-    }
 
-    if(state = false){
-        feedSpeed = 0; 
-        wheelSpeed = 0;
-        intakeDeploy = false;
-    }
+        if(feedSpeed == 0){
+            feedSpeed = -1;
+        }
 
+        else if(feedSpeed == -1){
+            feedSpeed = 0;
+        }
+
+    }
 }
 
 @Override
@@ -117,9 +131,6 @@ public void resetState() {
   feedSpeed = 0;
   wheelSpeed= 0;
   intakeDeploy = false;
-  wheelDirection = false;
-  wheelRun = false;
-  state = false;
 
 }
 
