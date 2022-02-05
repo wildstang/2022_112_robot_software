@@ -13,6 +13,7 @@ import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
 import org.wildstang.framework.subsystems.drive.TankPath;
 import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
 import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
+import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsPhoenix;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
@@ -20,6 +21,7 @@ import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Drive extends PathFollowingDrive {
@@ -27,8 +29,8 @@ public class Drive extends PathFollowingDrive {
     public enum DriveState{ TELEOP, AUTO, BASELOCK;}
 
     private WsSparkMax left, right;
-    private WsAnalogInput throttleJoystick, headingJoystick;
-    private WsDigitalInput baseLock;
+    private WsJoystickAxis throttleJoystick, headingJoystick;
+    private WsJoystickButton baseLock, gyroReset;
     private DriveState state;
 
     private double heading;
@@ -38,18 +40,22 @@ public class Drive extends PathFollowingDrive {
     private WSDriveHelper helper = new WSDriveHelper();
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
+    private final double INVERT = -1.0;
+
     @Override
     public void init() {
         left = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.LEFT_DRIVE);
         right = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.RIGHT_DRIVE);
         motorSetUp(left);
         motorSetUp(right);
-        throttleJoystick = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
+        throttleJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
         throttleJoystick.addInputListener(this);
-        headingJoystick = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
+        headingJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
         headingJoystick.addInputListener(this);
-        baseLock = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_SHOULDER);
+        baseLock = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_SHOULDER);
         baseLock.addInputListener(this);
+        gyroReset = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
+        gyroReset.addInputListener(this);
         resetState();
     }
 
@@ -61,19 +67,14 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void update() {
-        switch (state){
-            case TELEOP: 
-                signal = helper.teleopDrive(throttle, heading);
-                drive(signal);
-                break;
-            case BASELOCK:
-                left.setPosition(left.getPosition());
-                right.setPosition(right.getPosition());
-                break;
-            case AUTO:
-                break;
-        }
-
+        if (state == DriveState.TELEOP){
+            signal = helper.teleopDrive(throttle, heading);
+            drive(signal);
+        } else if (state == DriveState.BASELOCK){
+            left.setPosition(left.getPosition());
+            right.setPosition(right.getPosition());
+        } 
+        SmartDashboard.putString("drive state",state.toString());
     }
 
     @Override
@@ -82,7 +83,8 @@ public class Drive extends PathFollowingDrive {
         throttle = 0.0;
         heading = 0.0;
         signal = new DriveSignal(0.0, 0.0);
-        gyro.reset();
+        setBrakeMode(false);
+        //gyro.reset();
     }
 
     @Override
@@ -98,6 +100,10 @@ public class Drive extends PathFollowingDrive {
             state = DriveState.BASELOCK;
         } else {
             state = DriveState.TELEOP;
+        }
+        if (source == gyroReset && gyroReset.getValue()){
+            gyro.reset();
+            gyro.setAngleAdjustment(0.0);
         }
 
     }
@@ -139,8 +145,10 @@ public class Drive extends PathFollowingDrive {
     }
 
     public void drive(DriveSignal commandSignal){
-        left.setSpeed(commandSignal.leftMotor);
-        right.setSpeed(commandSignal.rightMotor);
+        //left.setSpeed(INVERT * commandSignal.leftMotor);
+        //right.setSpeed(commandSignal.rightMotor);
+        left.setSpeed(-1.0);
+        right.setSpeed(1.0);
     }
 
     private void motorSetUp(WsSparkMax setupMotor){
@@ -148,6 +156,11 @@ public class Drive extends PathFollowingDrive {
         setupMotor.initClosedLoop(constants.p, constants.i, constants.d, constants.f);
         setupMotor.setCurrentLimit(80, 20, 10000);
         setupMotor.enableVoltageCompensation();
+    }
+
+    public void setGyro(double degrees){
+        gyro.reset();
+        gyro.setAngleAdjustment(degrees);
     }
 
 }
