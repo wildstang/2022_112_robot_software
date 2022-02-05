@@ -56,22 +56,17 @@ public class BallpathMaybe implements Subsystem {
 }
 
 @Override
-public void inputUpdate(Input Source){
+public void inputUpdate(Input source){
 
-    boolean A = Abutton.getValue();
-    boolean X = Xbutton.getValue();
-    boolean Y = Ybutton.getValue();
-    double triggerValue = Trigger.getValue();
-
-    if (triggerValue > 0.05){
-        feedSpeed = triggerValue;
+    if (Trigger.getValue() > 0.05){
+        feedSpeed = Trigger.getValue();
     }    
 
     else if(feedSpeed > 0.05){
         feedSpeed = 0;
     }
 
-    if (A){
+    if (Abutton.getValue() && source == Abutton){
 
         intakeDeploy = !intakeDeploy;
 
@@ -85,7 +80,7 @@ public void inputUpdate(Input Source){
 
     }
 
-    if (Y){
+    if (Ybutton.getValue() && source == Ybutton){
         
         if(wheelSpeed == 1){
             wheelSpeed = -1;
@@ -98,7 +93,7 @@ public void inputUpdate(Input Source){
     }
 
 
-    if(X){
+    if(Xbutton.getValue() && source == Xbutton){
 
         if(feedSpeed == 0){
             feedSpeed = -1;
