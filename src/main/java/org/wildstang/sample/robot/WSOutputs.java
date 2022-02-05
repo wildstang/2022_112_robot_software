@@ -43,8 +43,6 @@ public enum WSOutputs implements Outputs {
     ANGLE3("Module 3 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE3, true)),
     DRIVE4("Module 4 Drive Motor", new WsSparkMaxConfig(CANConstants.DRIVE4, true)),
     ANGLE4("Module 4 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE4, true)),
-    WHEEL("Intake Wheel Motor", new WsSparkMaxConfig(CANConstants.MOTOR11, true)),
-    FEED("Feed Motor", new WsSparkMaxConfig(CANConstants.MOTOR12, true)),
 
     // ---------------------------------
     // Servos
@@ -61,7 +59,7 @@ public enum WSOutputs implements Outputs {
     // ********************************
 
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
-    INTAKE("Intake Arm Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+
     // ********************************
     // Relays
     // ********************************

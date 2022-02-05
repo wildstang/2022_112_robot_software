@@ -18,8 +18,8 @@
  import org.wildstang.hardware.roborio.outputs.WsPhoenix;
  import org.wildstang.hardware.roborio.outputs.WsSparkMax;
  import org.wildstang.hardware.roborio.outputs.WsSolenoid;
- import org.wildstang.sample.robot.WSInputs;
- import org.wildstang.sample.robot.WSOutputs;
+ import org.wildstang.year2022.robot.WSInputs;
+ import org.wildstang.year2022.robot.WSOutputs;
  
  import edu.wpi.first.wpilibj.Notifier;
  import edu.wpi.first.wpilibj.I2C;
