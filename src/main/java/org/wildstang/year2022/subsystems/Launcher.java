@@ -80,11 +80,11 @@ public class Launcher implements Subsystem {
         solenoidActive = false;
 
         launcherSpeed = 0;
-        
+
     }
 
     @Override
     public String getName() {
-        return "Sample";
+        return "Launcher";
     }
 }
