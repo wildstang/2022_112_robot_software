@@ -33,23 +33,29 @@ public enum WSOutputs implements Outputs {
     LEFT_DRIVE_FOLLOWER("Left Drive Follower", new WsSparkMaxFollowerConfig("Left Drive Motor", CANConstants.LEFT_DRIVE_FOLLOWER, true)),
     RIGHT_DRIVE_FOLLOWER("Right Drive Follower", new WsSparkMaxFollowerConfig("Right Drive Motor", CANConstants.RIGHT_DRIVE_FOLLOWER, true)),
     TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
-   
 
+    LAUNCHER_MOTOR("Launcher Motor", new WsSparkMaxConfig(CANConstants.SHOOTER, true)),
+    LAUNCHER_MOTOR_FOLLOWER("Launcher Motor Follower", new WsSparkMaxFollowerConfig("Launcher Motor", CANConstants.SHOOTER_FOLLOWER, true)),
+
+    KICKER_MOTOR("Kicker Motor", new WsSparkMaxConfig(CANConstants.KICKER, true)),
+
+    
     // ---------------------------------
     // Servos
     // ---------------------------------
     TEST_SERVO("Test Servo", new WsServoConfig(0, 0)),
-
+    
     // ********************************
     // DIO Outputs
     // ********************************
     DIO_O_0("Test Digital Output 0", new WsDigitalOutputConfig(0, true)), // Channel 0, Initially Low
-
+    
     // ********************************
     // Solenoids
     // ********************************
-
+    
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+    CARGO_HATCH_SOLENOID("Cargo Hatch Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
     
     // ********************************
     // Relays
