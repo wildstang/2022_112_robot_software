@@ -25,7 +25,7 @@
  import edu.wpi.first.wpilibj.I2C;
 
 
-public class BallpathMaybe implements Subsystem {
+public class Ballpath implements Subsystem {
     
     private WsDigitalInput Abutton, Ybutton, Xbutton;
     private WsAnalogInput Trigger;
@@ -33,7 +33,14 @@ public class BallpathMaybe implements Subsystem {
     private WsSolenoid Intake;
     private boolean intakeDeploy;
     private double feedSpeed, wheelSpeed;
-    
+    private enum feedStates{
+        up, out, off;
+    }
+    private feedStates feedState;
+    private enum wheelStates{
+        forward, backward, off;
+    }
+    private wheelStates wheelState;
 
  @Override
  public void init(){
@@ -59,35 +66,35 @@ public class BallpathMaybe implements Subsystem {
 public void inputUpdate(Input source){
 
     if (Trigger.getValue() > 0.05){
-        feedSpeed = Trigger.getValue();
+       feedState = feedStates.up;
     }    
 
-    else if(feedSpeed > 0.05){
-        feedSpeed = 0;
+    else if(Trigger == source){
+        feedState = feedStates.off;
     }
 
     if (Abutton.getValue() && source == Abutton){
 
         intakeDeploy = !intakeDeploy;
 
-        if(wheelSpeed != 0){
-            wheelSpeed = 0;
+        if(intakeDeploy == false){
+            wheelState = wheelStates.off;
         }
 
-        else {
-            wheelSpeed = 1;
+        else if(wheelState == wheelStates.off){
+            wheelState = wheelStates.forward;
         }
 
     }
 
     if (Ybutton.getValue() && source == Ybutton){
         
-        if(wheelSpeed == 1){
-            wheelSpeed = -1;
+        if(wheelState == wheelStates.forward){
+            wheelState = wheelStates.backward;
         }
 
-        else if(wheelSpeed == -1){
-            wheelSpeed = 1;
+        else if(wheelState == wheelStates.backward){
+            wheelState = wheelStates.forward;
         }
 
     }
@@ -95,15 +102,40 @@ public void inputUpdate(Input source){
 
     if(Xbutton.getValue() && source == Xbutton){
 
-        if(feedSpeed == 0){
-            feedSpeed = -1;
+        if(feedState == feedStates.off){
+            feedState = feedStates.out;
         }
 
-        else if(feedSpeed == -1){
-            feedSpeed = 0;
+        else if(feedState == feedStates.out){
+            feedState = feedStates.off;
         }
 
     }
+
+    if(feedState == feedStates.up){
+        feedSpeed = 1;
+    }
+
+    if(feedState == feedStates.out){
+        feedSpeed = -1;
+    }
+
+    if(feedState == feedStates.off){
+        feedSpeed = 0;
+    }
+
+    if(wheelState == wheelStates.forward){
+        wheelSpeed = 1;
+    }
+
+    if(wheelState == wheelStates.backward){
+        wheelSpeed = -1;
+    }
+
+    if(wheelState == wheelStates.off){
+        wheelSpeed = 0;
+    }
+
 }
 
 @Override
@@ -126,12 +158,13 @@ public void resetState() {
   feedSpeed = 0;
   wheelSpeed= 0;
   intakeDeploy = false;
-
+  feedState = feedStates.off;
+  wheelState = wheelStates.off;
 }
 
 @Override
 public String getName(){
-    return "Ballpath Maybe";
+    return "Ballpath";
 }
 
 }
