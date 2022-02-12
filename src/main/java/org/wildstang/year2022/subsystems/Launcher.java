@@ -10,8 +10,8 @@ import org.wildstang.hardware.roborio.outputs.WsSolenoid;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
 /**
- * Sample Subsystem that controls a motor with a joystick.
- * @author Liam
+ * Loads cargo and shoots it when the right trigger is pressed
+ * @author foxler2010
  */
 public class Launcher implements Subsystem {
 
@@ -45,13 +45,17 @@ public class Launcher implements Subsystem {
         //update outputs based on variable values
         cargoHatchSolenoid.setValue(solenoidActive);
         kickerMotor.setSpeed(kickerSpeed);
-        launcherMotor.setSpeed(1);
+        launcherMotor.setSpeed(launcherSpeed);
 
     }
     
     @Override
     public void inputUpdate(Input source) {
 
+        if (trigger.getValue() > 0.3) { //start this motor spinning before the ball is loaded
+
+            launcherSpeed = 1;
+        }
         if (trigger.getValue() > 0.5) {
     
             solenoidActive = true;
@@ -63,6 +67,8 @@ public class Launcher implements Subsystem {
             solenoidActive = false;
 
             kickerSpeed = 0;
+
+            launcherSpeed = 0;
 
         }
     }
