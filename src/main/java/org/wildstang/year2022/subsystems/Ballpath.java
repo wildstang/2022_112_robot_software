@@ -1,5 +1,5 @@
 
- package org.wildstang.framework.subsystems;
+ package org.wildstang.year2022.subsystems;
 
  import com.ctre.phoenix.motion.MotionProfileStatus;
  import com.kauailabs.navx.frc.AHRS;
@@ -20,12 +20,13 @@
  import org.wildstang.hardware.roborio.outputs.WsSolenoid;
  import org.wildstang.year2022.robot.WSInputs;
  import org.wildstang.year2022.robot.WSOutputs;
+ import org.wildstang.framework.subsystems.Subsystem;
  
  import edu.wpi.first.wpilibj.Notifier;
  import edu.wpi.first.wpilibj.I2C;
 
 
-public class Ballpath implements Subsystem {
+public class Ballpath implements Subsystem{
     
     private WsDigitalInput Abutton, Ybutton, Xbutton;
     private WsAnalogInput Trigger;
@@ -46,7 +47,7 @@ public class Ballpath implements Subsystem {
  public void init(){
 
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
-    Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.WHEEL);
+    Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
 
     Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
