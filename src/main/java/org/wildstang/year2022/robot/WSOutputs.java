@@ -33,7 +33,7 @@ public enum WSOutputs implements Outputs {
     RIGHT_DRIVE("Right Drive Motor", new WsSparkMaxConfig(CANConstants.RIGHT_DRIVE, true)),
     LEFT_DRIVE_FOLLOWER("Left Drive Follower", new WsSparkMaxFollowerConfig("Left Drive Motor", CANConstants.LEFT_DRIVE_FOLLOWER, true)),
     RIGHT_DRIVE_FOLLOWER("Right Drive Follower", new WsSparkMaxFollowerConfig("Right Drive Motor", CANConstants.RIGHT_DRIVE_FOLLOWER, true)),
-    TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
+    ROLLER_MOTOR("Roller Motor", new WsSparkMaxConfig(CANConstants.ROLLER_MOTOR, true)),
    
 
     // ---------------------------------
@@ -51,6 +51,7 @@ public enum WSOutputs implements Outputs {
     // ********************************
 
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+    EVERYBOT_SOLENOID("Everybot Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 1, false)),
     
     // ********************************
     // Relays
