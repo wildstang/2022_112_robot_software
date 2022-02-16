@@ -19,6 +19,7 @@ public class Everybot implements Subsystem {
     WsJoystickButton aButton;
     WsJoystickButton yButton;
     WsJoystickButton bButton;
+    //These will work, but using DigitalInput would be preferred
     WsSolenoid solenoid;
 
     @Override
@@ -28,6 +29,8 @@ public class Everybot implements Subsystem {
         aButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
         aButton.addInputListener(this);
         yButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_RIGHT);
+        //pretty sure you meant DRIVER_FACE_UP. Be careful, these are the mistakes that are very
+        //annoying to fix later if you don't catch them (spoken from experience)
         yButton.addInputListener(this);
         bButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_RIGHT);
         bButton.addInputListener(this);
@@ -71,7 +74,11 @@ public class Everybot implements Subsystem {
 
     @Override
     public void resetState() {
-
+        //I would've called roller.setSpeed(0) here to make sure that the roller resets to 0
+        //if the robot resets, as well as put the solenoid to true
+        //Great job! Go ahead and take a crack at coding one of the robot subsystems now, the 
+        //hood currently doesn't have anyone working on it to my knowledge
+        //https://github.com/wildstang/2022_112_robot_software/issues/6
     }
 
     @Override

@@ -19,13 +19,13 @@ public class SampleSubsystem implements Subsystem {
 
     @Override
     public void init() {
-        motor = (WsPhoenix) Core.getOutputManager().getOutput(WSOutputs.TEST_MOTOR);
+        //motor = (WsPhoenix) Core.getOutputManager().getOutput(WSOutputs.TEST_MOTOR);
         js = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
     }
 
     @Override
     public void update() {
-        motor.setValue(js.getValue());
+        //motor.setValue(js.getValue());
     }
 
     @Override
