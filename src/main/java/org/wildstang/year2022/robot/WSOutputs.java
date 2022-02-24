@@ -35,7 +35,7 @@ public enum WSOutputs implements Outputs {
     TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
 
     LAUNCHER_MOTOR("Launcher Motor", new WsSparkMaxConfig(CANConstants.SHOOTER, true)),
-    LAUNCHER_MOTOR_FOLLOWER("Launcher Motor Follower", new WsSparkMaxFollowerConfig("Launcher Motor", CANConstants.SHOOTER_FOLLOWER, true)),
+    LAUNCHER_MOTOR_FOLLOWER("Launcher Motor Follower", new WsSparkMaxFollowerConfig("Launcher Motor", CANConstants.SHOOTER_FOLLOWER, true, true)),
 
     KICKER_MOTOR("Kicker Motor", new WsSparkMaxConfig(CANConstants.KICKER, true)),
 
