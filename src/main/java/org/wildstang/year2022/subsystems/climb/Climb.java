@@ -30,39 +30,21 @@
 
 public class Climb implements Subsystem{
     
-    private WsSparkMax ArmA, ArmB;
-    private WsDoubleSolenoid SolenoidA, SolenoidB;
-    private WsDigitalInput Start, Select, D1, D2, D3, D4;
-    private enum armStates{
-        extend, retract, off;
-    }
-    private armStates armState;
-    private boolean solenoidDeploy, climbDeploy;
-    private int armSpeed;
+    private WsSparkMax motorRaise, motorRotate;
+    private WsAnalogInput raise, rotate;
+    private double raiseValue, rotateValue;
 
     @Override
     public void init(){
 
-        ArmA = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ARM_ONE);
-        ArmB= (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ARM_TWO);
+        motorRaise = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.MOTOR_RAISE);
+        motorRotate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.MOTOR_ROTATE);
 
-        SolenoidA = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.CLIMB_SOLENOID_A);
-        SolenoidB = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.CLIMB_SOLENOID_B);
-        
-        Start = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_START);
-        Start.addInputListener(this);
-        Select = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_SELECT);
-        Select.addInputListener(this);
+        raise = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
+        raise.addInputListener(this);
+        rotate = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_X);
+        rotate.addInputListener(this);
 
-        D1 = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_UP);
-        D1.addInputListener(this);
-        D2 = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_RIGHT);
-        D2.addInputListener(this);
-        D3 = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_DOWN);
-        D3.addInputListener(this);
-        D4 = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_LEFT);
-        D4.addInputListener(this);
-        
         resetState();
 
     }
@@ -70,63 +52,38 @@ public class Climb implements Subsystem{
     @Override
     public void inputUpdate(Input source){
 
-        if(Start.getValue() && Select.getValue()){
+        if(Math.abs(raise.getValue()) > 0.05){
 
-            climbDeploy = true;
-            armState = armStates.extend;
+            raiseValue = raise.getValue();
 
-        }
+        } 
+        else{
 
-        if(D1.getValue() && climbDeploy == true){
-
-            armState = armStates.extend;
-
-        }
-        if(D3.getValue() && climbDeploy == true){
-
-            armState = armStates.retract;
+            raiseValue = 0;
 
         }
 
-        if(D2.getValue() && climbDeploy == true){
+        if(Math.abs(rotate.getValue()) > 0.05){
 
-            solenoidDeploy = true;
- 
-        }
-        if(D4.getValue() && climbDeploy == true){
+            rotateValue = rotate.getValue();
 
-            solenoidDeploy = false;
- 
         }
+        else{
 
-        if(armState == armStates.extend){
-            armSpeed = 1;
+            rotateValue = 0;
+
         }
-        if(armState == armStates.retract){
-            armSpeed = -1;
-        }
-        if(armState == armStates.off){
-            armSpeed = 0;
-        }
+        
 
     }
 
     @Override
     public void update(){
 
-    ArmA.setSpeed(armSpeed);
-    ArmB.setSpeed(armSpeed);
+        motorRaise.setSpeed(raiseValue);
+        motorRotate.setSpeed(rotateValue);
 
-    if(solenoidDeploy = true){
-    SolenoidA.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-    SolenoidB.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
     }
-    else{
-    SolenoidA.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-    SolenoidB.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-    }
-
-}
 
 @Override
 public void selfTest(){
@@ -136,10 +93,8 @@ public void selfTest(){
 @Override
 public void resetState() {
 
-    armSpeed = 0;
-    armState = armStates.off;
-    solenoidDeploy = false;
-    climbDeploy = false;
+    raiseValue = 0;
+    rotateValue = 0;
 
 }
 
