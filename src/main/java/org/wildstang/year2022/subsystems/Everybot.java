@@ -1,15 +1,11 @@
 package org.wildstang.year2022.subsystems;
 
-import org.apache.commons.math3.dfp.DfpDec;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
-import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
-import org.wildstang.hardware.roborio.outputs.WsPhoenix;
+import org.wildstang.hardware.roborio.outputs.WsSolenoid;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
-import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
 
@@ -21,14 +17,21 @@ public class Everybot implements Subsystem {
 
     WsSparkMax motor;
     WsJoystickButton aButton;
+    WsJoystickButton yButton;
+    WsJoystickButton bButton;
+    WsSolenoid drewTheGOAT;
 
     @Override
     public void init() {
         
-        motor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.TEST_MOTOR);
+        motor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.INTAKE_MOTOR);
+        drewTheGOAT = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.ARM_SOLENOID);
         aButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
         aButton.addInputListener(this);
-
+        yButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_UP);
+        yButton.addInputListener(this);
+        bButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_RIGHT);
+        bButton.addInputListener(this);
     }
 
     @Override
@@ -40,9 +43,21 @@ public class Everybot implements Subsystem {
     public void inputUpdate(Input source) {
 
         if (source == aButton && aButton.getValue()) {
+
             motor.setValue(1);
+
         }
-        
+
+        if ((source == aButton || source == yButton) && (!aButton.getValue() && !yButton.getValue())) {
+
+            motor.setValue(0);
+
+        }
+
+        if (source == yButton && yButton.getValue()) {
+
+            motor.setValue(-1);
+        }
 
     } 
 
