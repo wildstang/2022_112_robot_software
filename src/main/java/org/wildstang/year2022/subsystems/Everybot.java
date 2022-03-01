@@ -10,8 +10,9 @@ import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
 
 /**
- * Sample Subsystem that controls a motor with a joystick.
- * @author Liam
+ * Controls the Input and Solenoid.
+ * @author YashwantCherukuri
+ * @author foxler2010
  */
 public class Everybot implements Subsystem {
 
@@ -32,6 +33,7 @@ public class Everybot implements Subsystem {
         yButton.addInputListener(this);
         bButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_RIGHT);
         bButton.addInputListener(this);
+
     }
 
     @Override
@@ -57,6 +59,18 @@ public class Everybot implements Subsystem {
         if (source == yButton && yButton.getValue()) {
 
             motor.setValue(-1);
+
+        }
+
+        if (source == bButton && bButton.getValue()) {
+
+            drewTheGOAT.setValue(true);
+        
+        }
+
+        if (source == bButton && !bButton.getValue()) {
+
+            drewTheGOAT.setValue(false);
         }
 
     } 
