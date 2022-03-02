@@ -8,7 +8,6 @@ import org.wildstang.hardware.roborio.outputs.config.WsPhoenixConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsMotorControllers;
 import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsPhoenixFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
@@ -38,22 +37,29 @@ public enum WSOutputs implements Outputs {
     FEED("Feed Motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
    
 
+    LAUNCHER_MOTOR("Launcher Motor", new WsSparkMaxConfig(CANConstants.SHOOTER, true)),
+    LAUNCHER_MOTOR_FOLLOWER("Launcher Motor Follower", new WsSparkMaxFollowerConfig("Launcher Motor", CANConstants.SHOOTER_FOLLOWER, true, true)),
+
+    KICKER_MOTOR("Kicker Motor", new WsSparkMaxConfig(CANConstants.KICKER, true)),
+
+    
     // ---------------------------------
     // Servos
     // ---------------------------------
     TEST_SERVO("Test Servo", new WsServoConfig(0, 0)),
-
+    
     // ********************************
     // DIO Outputs
     // ********************************
     DIO_O_0("Test Digital Output 0", new WsDigitalOutputConfig(0, true)), // Channel 0, Initially Low
-
+    
     // ********************************
     // Solenoids
     // ********************************
-
+    
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
     INTAKE("Intake Arm Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+    CARGO_HATCH_SOLENOID("Cargo Hatch Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
     
     // ********************************
     // Relays
