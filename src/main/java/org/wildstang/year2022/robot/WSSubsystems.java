@@ -4,6 +4,7 @@ import org.wildstang.framework.core.Subsystems;
 import org.wildstang.year2022.subsystems.Launcher;
 import org.wildstang.year2022.subsystems.drive.Drive;
 import org.wildstang.year2022.subsystems.Ballpath;
+import org.wildstang.year2022.subsystems.Tester;
 
 /**
  * All subsystems are enumerated here.
@@ -14,7 +15,8 @@ public enum WSSubsystems implements Subsystems {
     // enumerate subsystems
     DRIVE("Drive", Drive.class),
     BALLPATH("Ballpath", Ballpath.class),
-    LAUNCHER("Launcher", Launcher.class)
+    LAUNCHER("Launcher", Launcher.class),
+    TESTER("Tester", Tester.class)
     ;
 
     /**
