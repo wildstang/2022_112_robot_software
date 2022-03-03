@@ -24,26 +24,30 @@ public class Launcher implements Subsystem {
     double kickerSpeed;
 
     //Cargo Hatch Solenoid
-    WsSolenoid cargoHatchSolenoid;
+    //WsSolenoid cargoHatchSolenoid;
     boolean solenoidActive;
     
     //Trigger
-    AnalogInput trigger;
+    AnalogInput trigger, readyTrigger;
 
     @Override
     public void init() {
         launcherMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.LAUNCHER_MOTOR);
+        launcherMotor.setCurrentLimit(50, 50, 0);
         kickerMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.KICKER_MOTOR);
-        cargoHatchSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.CARGO_HATCH_SOLENOID);
-        trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
+        kickerMotor.setCurrentLimit(25, 25, 0);
+        //cargoHatchSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.CARGO_HATCH_SOLENOID);
+        trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
         trigger.addInputListener(this);
+        readyTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
+        readyTrigger.addInputListener(this);
     }
 
     @Override
     public void update() {
         
         //update outputs based on variable values
-        cargoHatchSolenoid.setValue(solenoidActive);
+        //cargoHatchSolenoid.setValue(solenoidActive);
         kickerMotor.setSpeed(kickerSpeed);
         launcherMotor.setSpeed(launcherSpeed);
 
@@ -52,25 +56,28 @@ public class Launcher implements Subsystem {
     @Override
     public void inputUpdate(Input source) {
 
-        if (trigger.getValue() > 0.3) { //start this motor spinning before the ball is loaded
+        if (Math.abs(readyTrigger.getValue()) > 0.3) { //start this motor spinning before the ball is loaded
 
-            launcherSpeed = 1;
-        }
-        if (trigger.getValue() > 0.5) {
-    
-            solenoidActive = true;
+            launcherSpeed = 0.4;
 
             kickerSpeed = 1;
-    
-        } else {
-            
-            solenoidActive = false;
 
-            kickerSpeed = 0;
+        } else {
 
             launcherSpeed = 0;
 
+            kickerSpeed = 0;
+
         }
+        // if (Math.abs(trigger.getValue()) > 0.5) {
+    
+        //     solenoidActive = true;
+    
+        // } else {
+            
+        //     solenoidActive = false;
+
+        // }
     }
 
     @Override
@@ -83,7 +90,7 @@ public class Launcher implements Subsystem {
 
         kickerSpeed = 0;
 
-        solenoidActive = false;
+        //solenoidActive = false;
 
         launcherSpeed = 0;
 

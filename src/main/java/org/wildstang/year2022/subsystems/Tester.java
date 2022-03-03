@@ -34,12 +34,12 @@ public class Tester implements Subsystem {
         }
 
         if (Math.abs(leftStickY.getValue()) > 0.2) {
-            climbRotateSpeed = climbMaxSpeed * leftStickY.getValue() / Math.abs(leftStickY.getValue());
+            climbRotateSpeed = climbMaxSpeed * Math.signum(leftStickY.getValue());
         } else {
             climbRotateSpeed = 0;
         }
         if (Math.abs(rightStickY.getValue()) > 0.2) {
-            climbLiftSpeed = climbMaxSpeed * rightStickY.getValue() / Math.abs(rightStickY.getValue());
+            climbLiftSpeed = rightStickY.getValue();//probably want this to be able to go more than 0.2 to lift the robot
         } else {
             climbLiftSpeed = 0;
         }
@@ -58,6 +58,7 @@ public class Tester implements Subsystem {
 
         climbLiftMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
         climbRotateMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
+        hoodMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.HOOD_MOTOR);
         
         hoodMotor.setCurrentLimit(15, 15, 0);
 

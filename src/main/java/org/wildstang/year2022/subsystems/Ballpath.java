@@ -49,6 +49,8 @@ public class Ballpath implements Subsystem{
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+    Wheel.setCurrentLimit(25, 25, 0);
+    Feed.setCurrentLimit(25, 25, 0);
 
     Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
          Abutton.addInputListener(this);
@@ -66,51 +68,23 @@ public class Ballpath implements Subsystem{
 @Override
 public void inputUpdate(Input source){
 
-    if (Trigger.getValue() > 0.05){
-       feedState = feedStates.up;
-    }    
+    if (Abutton.getValue()){
 
-    else if(Trigger == source){
-        feedState = feedStates.off;
+        intakeDeploy = true;
+        wheelState = wheelStates.forward;
+    } else {
+        intakeDeploy = false;
+        wheelState = wheelStates.off;
     }
 
-    if (Abutton.getValue() && source == Abutton){
 
-        intakeDeploy = !intakeDeploy;
-
-        if(intakeDeploy == false){
-            wheelState = wheelStates.off;
-        }
-
-        else if(wheelState == wheelStates.off){
-            wheelState = wheelStates.forward;
-        }
-
-    }
-
-    if (Ybutton.getValue() && source == Ybutton){
+    if (Ybutton.getValue()){
         
-        if(wheelState == wheelStates.forward){
-            wheelState = wheelStates.backward;
-        }
-
-        else if(wheelState == wheelStates.backward){
-            wheelState = wheelStates.forward;
-        }
-
-    }
-
-
-    if(Xbutton.getValue() && source == Xbutton){
-
-        if(feedState == feedStates.off){
-            feedState = feedStates.out;
-        }
-
-        else if(feedState == feedStates.out){
-            feedState = feedStates.off;
-        }
-
+        feedState = feedStates.out;
+    } else if (Xbutton.getValue() || Math.abs(Trigger.getValue()) > 0.15){
+        feedState = feedStates.up;
+    } else {
+        feedState = feedStates.off;
     }
 
     if(feedState == feedStates.up){
