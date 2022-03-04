@@ -31,7 +31,7 @@ public class Ballpath implements Subsystem{
     private WsDigitalInput Abutton, Ybutton, Xbutton;
     private WsAnalogInput Trigger;
     private WsSparkMax Wheel, Feed;
-    private WsSolenoid Intake;
+    private WsSolenoid Intake, Intake2;
     private boolean intakeDeploy;
     private double feedSpeed, wheelSpeed;
     private enum feedStates{
@@ -47,6 +47,7 @@ public class Ballpath implements Subsystem{
  public void init(){
 
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
+    Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE2);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
     Wheel.setCurrentLimit(25, 25, 0);
@@ -119,6 +120,7 @@ public void update(){
     Feed.setSpeed(feedSpeed);
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
+    Intake2.setValue(intakeDeploy);
 
 }
 
