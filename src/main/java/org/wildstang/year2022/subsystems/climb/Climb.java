@@ -37,8 +37,8 @@ public class Climb implements Subsystem{
     @Override
     public void init(){
 
-        motorRaise = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.MOTOR_RAISE);
-        motorRotate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.MOTOR_ROTATE);
+        motorRaise = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
+        motorRotate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
 
         raise = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
         raise.addInputListener(this);

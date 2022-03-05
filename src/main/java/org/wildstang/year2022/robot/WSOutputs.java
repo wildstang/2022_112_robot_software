@@ -36,10 +36,6 @@ public enum WSOutputs implements Outputs {
     RIGHT_DRIVE_FOLLOWER("Right Drive Follower", new WsSparkMaxFollowerConfig("Right Drive Motor", CANConstants.RIGHT_DRIVE_FOLLOWER, true)),
 
     TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
-    MOTOR_RAISE("Raise Arm Motor", new WsSparkMaxConfig(CANConstants.RAISE, true)),
-    MOTOR_RAISE_FOLLOWER("Raise Arm Follower Motor", new WsSparkMaxFollowerConfig("Raise Arm Motor",CANConstants.RAISE_FOLLOWER, true)),
-    MOTOR_ROTATE("Rotate Arm Motor", new WsSparkMaxConfig(CANConstants.ROTATE, true)),
-    MOTOR_ROTATE_FOLLOWER("Rotate Arm Follower Motor", new WsSparkMaxFollowerConfig("Rotate Arm Motor",CANConstants.ROTATE_FOLLOWER, true)),
 
     
     ARM_WHEEL("Intake Wheel Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
