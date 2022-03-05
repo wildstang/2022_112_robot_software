@@ -39,13 +39,13 @@ public class hood implements Subsystem {
         Hood_Motor.initClosedLoop(1.0, 0.0, 0.0, 0.0);
         yAxis = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
         yAxis.addInputListener(this);
-        dpad_up = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_UP); 
+        dpad_up = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_UP); 
         dpad_up.addInputListener(this);
-        dpad_right = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_RIGHT); 
+        dpad_right = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_RIGHT); 
         dpad_right.addInputListener(this);
-        dpad_left = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_LEFT); 
+        dpad_left = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_LEFT); 
         dpad_left.addInputListener(this);
-        dpad_down = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_DOWN); 
+        dpad_down = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_DOWN); 
         dpad_down.addInputListener(this);
         left_trigger =  (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
         left_trigger.addInputListener(this);
@@ -90,7 +90,6 @@ public class hood implements Subsystem {
     public void resetState() {
         position = 0;
         Hood_Motor.resetEncoder();
-        Hood_Motor.setValue(Hood_Motor.getController().getAnalog(Mode.kAbsolute).getVoltage()/3.3);
         
     }
 
