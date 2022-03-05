@@ -26,12 +26,11 @@ public final class CANConstants {
     public static final int SHOOTER = 23;
     public static final int SHOOTER_FOLLOWER = 24;
     public static final int HOOD = 25;
-    public static final int CLIMBER = 26;
-    public static final int CLIMBER_FOLLOWER = 27;
-    public static final int RAISE = 28;
-    public static final int RAISE_FOLLOWER = 29; 
-    public static final int ROTATE = 30;
-    public static final int ROTATE_FOLLOWER = 31; 
+
+    public static final int CLIMBER = 28;
+    public static final int CLIMBER_FOLLOWER = 29;
+    public static final int CLIMBER_ROTATE = 26;
+    public static final int CLIMBER_ROTATE_FOLLOWER = 27;
 
     
 }
