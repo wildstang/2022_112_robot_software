@@ -34,7 +34,9 @@ public enum WSOutputs implements Outputs {
     LEFT_DRIVE_FOLLOWER("Left Drive Follower", new WsSparkMaxFollowerConfig("Left Drive Motor", CANConstants.LEFT_DRIVE_FOLLOWER, true)),
     RIGHT_DRIVE_FOLLOWER("Right Drive Follower", new WsSparkMaxFollowerConfig("Right Drive Motor", CANConstants.RIGHT_DRIVE_FOLLOWER, true)),
     TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
-   
+    Hood_Motor("Hood Motor", new WsSparkMaxConfig(CANConstants.HOOD, true)), 
+
+  
 
     // ---------------------------------
     // Servos
