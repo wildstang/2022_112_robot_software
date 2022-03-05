@@ -1,23 +1,10 @@
 package org.wildstang.year2022.subsystems.hood;
-
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.kauailabs.navx.frc.AHRS;
-
-import org.checkerframework.checker.units.qual.degrees;
 import org.wildstang.framework.core.Core;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.inputs.Input;
-import org.wildstang.framework.logger.Log;
-import org.wildstang.framework.pid.PIDConstants;
-import org.wildstang.framework.subsystems.drive.Path;
-import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
-import org.wildstang.framework.subsystems.drive.TankPath;
-import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
-import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsPhoenix;
@@ -25,10 +12,6 @@ import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
 import org.wildstang.framework.subsystems.Subsystem;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.I2C;
-
 
 public class hood implements Subsystem {
 
