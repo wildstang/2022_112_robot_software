@@ -1,9 +1,7 @@
 package org.wildstang.framework.auto.steps;
 
 import org.wildstang.framework.auto.AutoStep;
-import org.wildstang.framework.core.Core;
 import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
-import org.wildstang.sample.robot.WSSubsystems;
 
 public class SetGyroStep extends AutoStep {
 
