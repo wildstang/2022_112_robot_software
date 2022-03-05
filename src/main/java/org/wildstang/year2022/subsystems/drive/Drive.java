@@ -29,6 +29,8 @@ public class Drive extends PathFollowingDrive {
     private WSDriveHelper helper = new WSDriveHelper();
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
+    private final double INVERT = -1.0;
+
     @Override
     public void init() {
         left = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.LEFT_DRIVE);
@@ -131,10 +133,8 @@ public class Drive extends PathFollowingDrive {
     }
 
     public void drive(DriveSignal commandSignal){
-        //left.setSpeed(INVERT * commandSignal.leftMotor);
-        //right.setSpeed(commandSignal.rightMotor);
-        left.setSpeed(-1.0);
-        right.setSpeed(1.0);
+        left.setSpeed(INVERT * commandSignal.leftMotor);
+        right.setSpeed(commandSignal.rightMotor);
     }
 
     private void motorSetUp(WsSparkMax setupMotor){

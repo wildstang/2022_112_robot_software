@@ -6,7 +6,10 @@
  
  import org.wildstang.framework.core.Core;
  import com.revrobotics.CANSparkMax;
- import org.wildstang.framework.io.inputs.Input;
+
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.inputs.Input;
  import org.wildstang.framework.logger.Log;
  import org.wildstang.framework.pid.PIDConstants;
  import org.wildstang.framework.subsystems.drive.Path;
@@ -23,13 +26,14 @@
  import org.wildstang.framework.subsystems.Subsystem;
  
  import edu.wpi.first.wpilibj.Notifier;
- import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.I2C;
 
 
 public class Ballpath implements Subsystem{
     
-    private WsDigitalInput Abutton, Ybutton, Xbutton;
-    private WsAnalogInput Trigger;
+    private DigitalInput Abutton, Ybutton, Xbutton;
+    private AnalogInput Trigger;
     private WsSparkMax Wheel, Feed;
     private WsSolenoid Intake, Intake2;
     private boolean intakeDeploy;
@@ -47,19 +51,19 @@ public class Ballpath implements Subsystem{
  public void init(){
 
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
-    Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE2);
+    Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
     Wheel.setCurrentLimit(25, 25, 0);
     Feed.setCurrentLimit(25, 25, 0);
 
-    Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
+    Abutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
          Abutton.addInputListener(this);
-    Xbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
+    Xbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
          Xbutton.addInputListener(this);
-    Ybutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
+    Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
          Ybutton.addInputListener(this);
-    Trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
+    Trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
     
     resetState();
@@ -121,6 +125,8 @@ public void update(){
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
     Intake2.setValue(intakeDeploy);
+
+    SmartDashboard.putNumber("Intake", wheelSpeed);
 
 }
 

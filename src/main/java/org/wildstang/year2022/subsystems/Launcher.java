@@ -49,7 +49,7 @@ public class Launcher implements Subsystem {
         //update outputs based on variable values
         //cargoHatchSolenoid.setValue(solenoidActive);
         kickerMotor.setSpeed(kickerSpeed);
-        launcherMotor.setSpeed(launcherSpeed);
+        launcherMotor.setSpeed(-launcherSpeed);
 
     }
     
