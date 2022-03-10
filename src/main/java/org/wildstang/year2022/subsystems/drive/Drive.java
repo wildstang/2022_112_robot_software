@@ -11,6 +11,7 @@ import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Drive extends PathFollowingDrive {
@@ -30,6 +31,9 @@ public class Drive extends PathFollowingDrive {
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
     private final double INVERT = -1.0;
+
+    private SlewRateLimiter limiter = new SlewRateLimiter(3);
+    private SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
 
     @Override
     public void init() {
@@ -82,8 +86,8 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void inputUpdate(Input source) {
-        heading = -headingJoystick.getValue();
-        throttle = -throttleJoystick.getValue();
+        heading = turnLimiter.calculate(-headingJoystick.getValue());
+        throttle = limiter.calculate(-throttleJoystick.getValue());
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {
