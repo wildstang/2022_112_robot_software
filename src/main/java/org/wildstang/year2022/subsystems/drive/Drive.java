@@ -41,6 +41,8 @@ public class Drive extends PathFollowingDrive {
         right = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.RIGHT_DRIVE);
         motorSetUp(left);
         motorSetUp(right);
+        left.getController().setOpenLoopRampRate(2);
+        right.getController().setOpenLoopRampRate(2);
         throttleJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
         throttleJoystick.addInputListener(this);
         headingJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
@@ -86,8 +88,10 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void inputUpdate(Input source) {
-        heading = turnLimiter.calculate(-headingJoystick.getValue());
-        throttle = limiter.calculate(-throttleJoystick.getValue());
+        // heading = -headingJoystick.getValue();
+        heading = -headingJoystick.getValue() * Math.abs(headingJoystick.getValue());
+        // throttle = -throttleJoystick.getValue();
+        throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {

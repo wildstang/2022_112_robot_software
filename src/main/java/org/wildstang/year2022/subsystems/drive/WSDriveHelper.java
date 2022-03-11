@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WSDriveHelper {
 
-    public static final double DEADBAND = 0.10;
+    public static final double DEADBAND = 0.15;
     private DriveSignal driveSignal = new DriveSignal(0, 0);
 
     public DriveSignal teleopDrive(double throttle, double heading) {
