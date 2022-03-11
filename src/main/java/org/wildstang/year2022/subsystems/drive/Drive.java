@@ -2,6 +2,7 @@ package org.wildstang.year2022.subsystems.drive;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.wildstang.framework.core.Core;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.pid.PIDConstants;
 import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
@@ -21,6 +22,7 @@ public class Drive extends PathFollowingDrive {
     private WsSparkMax left, right;
     private WsJoystickAxis throttleJoystick, headingJoystick;
     private WsJoystickButton baseLock, gyroReset;
+    private AnalogInput rightTrigger, leftTrigger;
     private DriveState state;
 
     private double heading;
@@ -51,6 +53,10 @@ public class Drive extends PathFollowingDrive {
         baseLock.addInputListener(this);
         gyroReset = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         gyroReset.addInputListener(this);
+        rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
+        rightTrigger.addInputListener(this);
+        leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
+        rightTrigger.addInputListener(this);
         resetState();
     }
 
@@ -91,7 +97,8 @@ public class Drive extends PathFollowingDrive {
         // heading = -headingJoystick.getValue();
         heading = -headingJoystick.getValue() * Math.abs(headingJoystick.getValue());
         // throttle = -throttleJoystick.getValue();
-        throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
+       // throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
+       throttle = -getTriggerThrottle();
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {
@@ -155,6 +162,16 @@ public class Drive extends PathFollowingDrive {
     public void setGyro(double degrees){
         gyro.reset();
         gyro.setAngleAdjustment(degrees);
+    }
+
+    private double getTriggerThrottle(){
+        if (Math.abs(rightTrigger.getValue()) > 0.15){
+            return Math.pow(rightTrigger.getValue(), 2);
+        } else if (Math.abs(leftTrigger.getValue()) > 0.15) {
+            return -Math.pow(leftTrigger.getValue(), 2);
+        } else {
+            return 0.0;
+        }
     }
 
 }
