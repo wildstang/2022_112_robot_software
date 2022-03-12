@@ -27,6 +27,7 @@ public class Drive extends PathFollowingDrive {
 
     private double heading;
     private double throttle;
+    private double backThrottle;
     private DriveSignal signal;
 
     private WSDriveHelper helper = new WSDriveHelper();
@@ -34,8 +35,8 @@ public class Drive extends PathFollowingDrive {
 
     private final double INVERT = -1.0;
 
-    private SlewRateLimiter limiter = new SlewRateLimiter(3);
-    private SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
+    //private SlewRateLimiter limiter = new SlewRateLimiter(3);
+    //private SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
 
     @Override
     public void init() {
@@ -56,7 +57,7 @@ public class Drive extends PathFollowingDrive {
         rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
         rightTrigger.addInputListener(this);
         leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
-        rightTrigger.addInputListener(this);
+        leftTrigger.addInputListener(this);
         resetState();
     }
 
@@ -68,19 +69,27 @@ public class Drive extends PathFollowingDrive {
     @Override
     public void update() {
         if (state == DriveState.TELEOP){
-            signal = helper.teleopDrive(throttle, heading);
+            //if (Math.abs(rightTrigger.getValue()) < 0.15 && Math.abs(leftTrigger.getValue()) < 0.15) throttle = 0;
+            if (Math.abs(throttle) < Math.abs(backThrottle)){
+                signal = helper.teleopDrive(0.75*backThrottle, 0.5*heading);
+            } else {
+                signal = helper.teleopDrive(0.75*throttle, 0.5*heading);
+            }
             drive(signal);
         } else if (state == DriveState.BASELOCK){
             left.setPosition(left.getPosition());
             right.setPosition(right.getPosition());
         } 
         SmartDashboard.putString("drive state",state.toString());
+        SmartDashboard.putNumber("drive throttle", throttle);
+        SmartDashboard.putNumber("drive back throttle", backThrottle);
     }
 
     @Override
     public void resetState() {
         state = DriveState.TELEOP;
         throttle = 0.0;
+        backThrottle = 0;
         heading = 0.0;
         signal = new DriveSignal(0.0, 0.0);
         setBrakeMode(false);
@@ -95,10 +104,13 @@ public class Drive extends PathFollowingDrive {
     @Override
     public void inputUpdate(Input source) {
         // heading = -headingJoystick.getValue();
-        heading = -headingJoystick.getValue() * Math.abs(headingJoystick.getValue());
+        heading = -headingJoystick.getValue() * Math.pow(Math.abs(headingJoystick.getValue()), headingJoystick.getValue());
         // throttle = -throttleJoystick.getValue();
        // throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
-       throttle = -getTriggerThrottle();
+       //throttle = -getTriggerThrottle();
+       throttle = -Math.pow(Math.abs(rightTrigger.getValue()), 2);
+       backThrottle = Math.pow(Math.abs(leftTrigger.getValue()), 2);
+       
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {
@@ -166,9 +178,9 @@ public class Drive extends PathFollowingDrive {
 
     private double getTriggerThrottle(){
         if (Math.abs(rightTrigger.getValue()) > 0.15){
-            return Math.pow(rightTrigger.getValue(), 2);
+            return Math.pow(Math.abs(rightTrigger.getValue()), 2);
         } else if (Math.abs(leftTrigger.getValue()) > 0.15) {
-            return -Math.pow(leftTrigger.getValue(), 2);
+            return -Math.pow(Math.abs(leftTrigger.getValue()), 2);
         } else {
             return 0.0;
         }
