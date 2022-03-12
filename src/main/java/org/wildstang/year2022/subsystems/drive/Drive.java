@@ -33,6 +33,7 @@ public class Drive extends PathFollowingDrive {
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
     private final double INVERT = -1.0;
+    private final double throttleLimiter = .5;
 
     private SlewRateLimiter limiter = new SlewRateLimiter(3);
     private SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
@@ -98,7 +99,7 @@ public class Drive extends PathFollowingDrive {
         heading = -headingJoystick.getValue() * Math.abs(headingJoystick.getValue());
         // throttle = -throttleJoystick.getValue();
        // throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
-       throttle = -getTriggerThrottle();
+       throttle = throttleLimiter*(-getTriggerThrottle());
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {
