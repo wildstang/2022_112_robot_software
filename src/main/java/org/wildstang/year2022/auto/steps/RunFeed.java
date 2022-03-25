@@ -8,47 +8,43 @@ import org.wildstang.year2022.subsystems.Ballpath;
 import frc.paths.*;
 
 
-
-public class IntakeExtend{
-
+public class RunFeed{
+   
     @Override 
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
-    
+
     @Override
     public void update(){
+    
+        myBallpath.myfeedSpeed.setSpeed(1);
 
-        myBallpath.myintakeDeploy.setValue(true);
-
-        if (myBallpath.myintakeDeploy.getValue() == true){
+        if (myBallpath.myfeedSpeed.getVelocity() == 1){
             getFinished(true);
-        }
 
     }
+
 }
-
-public class IntakeRetract{
-
+public class StopFeed{
+   
     @Override 
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
-    
+
     @Override
     public void update(){
+    
+        myBallpath.myfeedSpeed.setSpeed(0);
 
-        myBallpath.myintakeDeploy.setValue(false);
-
-        if (myBallpath.myintakeDeploy.getValue() == false){
+        if (myBallpath.myfeedSpeed.getVelocity() == 0){
             getFinished(true);
-        }
 
     }
+
 }
-
-
