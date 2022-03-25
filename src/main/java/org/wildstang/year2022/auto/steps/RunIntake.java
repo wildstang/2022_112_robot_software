@@ -24,6 +24,8 @@ public class IntakeForward{
 
         if (myBallpath.mywheelSpeed.getVelocity() == 1){
             getFinished(true);
+        }
+    
 
     }
 
@@ -45,6 +47,7 @@ public class IntakeOff{
 
         if (myBallpath.mywheelSpeed.getVelocity() == 0){
             getFinished(true);
+        }
 
     }
 

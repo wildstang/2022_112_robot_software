@@ -24,6 +24,7 @@ public class RunFeed{
 
         if (myBallpath.myfeedSpeed.getVelocity() == 1){
             getFinished(true);
+        }
 
     }
 
@@ -44,6 +45,7 @@ public class StopFeed{
 
         if (myBallpath.myfeedSpeed.getVelocity() == 0){
             getFinished(true);
+        }
 
     }
 
