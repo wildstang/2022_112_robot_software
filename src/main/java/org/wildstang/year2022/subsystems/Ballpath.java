@@ -32,8 +32,8 @@ public class Ballpath implements Subsystem{
     private WsAnalogInput Trigger;
     private WsSparkMax Wheel, Feed;
     private WsSolenoid Intake;
-    private boolean intakeDeploy;
-    private double feedSpeed, wheelSpeed;
+    public boolean intakeDeploy;
+    public double feedSpeed, wheelSpeed;
     private enum feedStates{
         up, out, off;
     }
