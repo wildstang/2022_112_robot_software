@@ -56,13 +56,13 @@ public class Tester implements Subsystem {
         rightStickY = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_Y);
         rightStickY.addInputListener(this);
 
-        climbLiftMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
-        climbRotateMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
+        //climbLiftMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
+        //climbRotateMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
         hoodMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.HOOD_MOTOR);
         
         hoodMotor.setCurrentLimit(15, 15, 0);
-        climbLiftMotor.setCurrentLimit(50, 50, 0);
-        climbRotateMotor.setCurrentLimit(50, 50, 0);
+        //climbLiftMotor.setCurrentLimit(50, 50, 0);
+        //climbRotateMotor.setCurrentLimit(50, 50, 0);
 
         resetState();
     }
@@ -75,8 +75,8 @@ public class Tester implements Subsystem {
     public void update() {
         hoodMotor.setSpeed(hoodSpeed);
 
-        climbRotateMotor.setSpeed(climbRotateSpeed);
-        climbLiftMotor.setSpeed(climbLiftSpeed);    
+        //climbRotateMotor.setSpeed(climbRotateSpeed);
+        //climbLiftMotor.setSpeed(climbLiftSpeed);    
     }
 
     @Override
