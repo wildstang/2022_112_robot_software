@@ -6,7 +6,10 @@
  
  import org.wildstang.framework.core.Core;
  import com.revrobotics.CANSparkMax;
- import org.wildstang.framework.io.inputs.Input;
+
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.inputs.Input;
  import org.wildstang.framework.logger.Log;
  import org.wildstang.framework.pid.PIDConstants;
  import org.wildstang.framework.subsystems.drive.Path;
@@ -23,15 +26,16 @@
  import org.wildstang.framework.subsystems.Subsystem;
  
  import edu.wpi.first.wpilibj.Notifier;
- import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.I2C;
 
 
 public class Ballpath implements Subsystem{
     
-    private WsDigitalInput Abutton, Ybutton, Xbutton;
-    private WsAnalogInput Trigger;
-    private WsSparkMax Wheel, Feed;
-    private WsSolenoid Intake;
+    private DigitalInput Abutton, Ybutton, Xbutton;
+    private AnalogInput Trigger;
+    private WsSparkMax Wheel, Feed, Ball_Gate;
+    private WsSolenoid Intake, Intake2;
     private boolean intakeDeploy;
     private double feedSpeed, wheelSpeed;
     private enum feedStates{
@@ -47,16 +51,21 @@ public class Ballpath implements Subsystem{
  public void init(){
 
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
+    Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+    Ball_Gate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALL_GATE);
+    Wheel.setCurrentLimit(25, 25, 0);
+    Feed.setCurrentLimit(25, 25, 0);
+    Ball_Gate.setCurrentLimit(25, 25, 0);
 
-    Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
+    Abutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
          Abutton.addInputListener(this);
-    Xbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
+    Xbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
          Xbutton.addInputListener(this);
-    Ybutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
+    Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
          Ybutton.addInputListener(this);
-    Trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
+    Trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
     
     resetState();
@@ -66,51 +75,23 @@ public class Ballpath implements Subsystem{
 @Override
 public void inputUpdate(Input source){
 
-    if (Trigger.getValue() > 0.05){
-       feedState = feedStates.up;
-    }    
+    if (Abutton.getValue()){
 
-    else if(Trigger == source){
-        feedState = feedStates.off;
+        intakeDeploy = true;
+        wheelState = wheelStates.forward;
+    } else {
+        intakeDeploy = false;
+        wheelState = wheelStates.off;
     }
 
-    if (Abutton.getValue() && source == Abutton){
 
-        intakeDeploy = !intakeDeploy;
-
-        if(intakeDeploy == false){
-            wheelState = wheelStates.off;
-        }
-
-        else if(wheelState == wheelStates.off){
-            wheelState = wheelStates.forward;
-        }
-
-    }
-
-    if (Ybutton.getValue() && source == Ybutton){
+    if (Ybutton.getValue()){
         
-        if(wheelState == wheelStates.forward){
-            wheelState = wheelStates.backward;
-        }
-
-        else if(wheelState == wheelStates.backward){
-            wheelState = wheelStates.forward;
-        }
-
-    }
-
-
-    if(Xbutton.getValue() && source == Xbutton){
-
-        if(feedState == feedStates.off){
-            feedState = feedStates.out;
-        }
-
-        else if(feedState == feedStates.out){
-            feedState = feedStates.off;
-        }
-
+        feedState = feedStates.out;
+    } else if (Xbutton.getValue() || Math.abs(Trigger.getValue()) > 0.15){
+        feedState = feedStates.up;
+    } else {
+        feedState = feedStates.off;
     }
 
     if(feedState == feedStates.up){
@@ -145,6 +126,9 @@ public void update(){
     Feed.setSpeed(feedSpeed);
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
+    Intake2.setValue(intakeDeploy);
+
+    SmartDashboard.putNumber("Intake", wheelSpeed);
 
 }
 
