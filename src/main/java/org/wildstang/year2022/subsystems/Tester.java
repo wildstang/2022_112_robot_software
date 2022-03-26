@@ -20,7 +20,7 @@ public class Tester implements Subsystem {
     private double hoodSpeed, climbRotateSpeed, climbLiftSpeed;
     
     private final double hoodMaxSpeed = 0.1;
-    private final double climbMaxSpeed = 0.1;
+    private final double climbMaxSpeed = 0.5;
 
 
     @Override
@@ -33,13 +33,13 @@ public class Tester implements Subsystem {
             hoodSpeed = 0;
         }
 
-        if (Math.abs(leftStickY.getValue()) > 0.2) {
-            climbRotateSpeed = climbMaxSpeed * Math.signum(leftStickY.getValue());
+        if (Math.abs(rightStickY.getValue()) > 0.2) {
+            climbRotateSpeed = climbMaxSpeed * rightStickY.getValue();
         } else {
             climbRotateSpeed = 0;
         }
-        if (Math.abs(rightStickY.getValue()) > 0.2) {
-            climbLiftSpeed = rightStickY.getValue();//probably want this to be able to go more than 0.2 to lift the robot
+        if (Math.abs(leftStickY.getValue()) > 0.2) {
+            climbLiftSpeed = leftStickY.getValue();//probably want this to be able to go more than 0.2 to lift the robot
         } else {
             climbLiftSpeed = 0;
         }
@@ -56,8 +56,8 @@ public class Tester implements Subsystem {
         rightStickY = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_Y);
         rightStickY.addInputListener(this);
 
-        //climbLiftMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
-        //climbRotateMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
+        climbLiftMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
+        climbRotateMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
         hoodMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.HOOD_MOTOR);
         
         hoodMotor.setCurrentLimit(15, 15, 0);
