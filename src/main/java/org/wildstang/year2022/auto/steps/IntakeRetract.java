@@ -9,29 +9,6 @@ import frc.paths.*;
 
 
 
-public class IntakeExtend{
-
-    private Ballpath myBallpath;
-
-
-    public void init(){
-
-        myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
-
-    }
-    
-
-    public void update(){
-
-        myBallpath.myintakeDeploy.setValue(true);
-
-        if (myBallpath.myintakeDeploy.getValue() == true){
-            setFinished(true);
-        }
-
-    }
-}
-
 public class IntakeRetract{
 
     private Ballpath myBallpath;
@@ -39,7 +16,7 @@ public class IntakeRetract{
 
     public void init(){
 
-        myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
+        myBallpath = (Ballpath) Core.getSubsystemManager().getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
     
@@ -49,10 +26,8 @@ public class IntakeRetract{
         myBallpath.myintakeDeploy.setValue(false);
 
         if (myBallpath.myintakeDeploy.getValue() == false){
-            setFinished(true);
+            this.setFinished(true);
         }
 
     }
 }
-
-

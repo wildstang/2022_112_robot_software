@@ -8,7 +8,7 @@ import org.wildstang.year2022.subsystems.Ballpath;
 import frc.paths.*;
 
 
-public class RunFeed{
+public class IntakeOff{
 
     private Ballpath myBallpath;
    
@@ -22,13 +22,12 @@ public class RunFeed{
 
     public void update(){
     
-        myBallpath.myfeedSpeed.setSpeed(1);
+        myBallpath.mywheelSpeed.setSpeed(0);
 
-        if (myBallpath.myfeedSpeed.getVelocity() == 1){
+        if (myBallpath.mywheelSpeed.getVelocity() == 0){
             this.setFinished(true);
         }
 
     }
 
 }
-
