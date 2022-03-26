@@ -36,6 +36,7 @@ public enum WSOutputs implements Outputs {
     TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
     ARM_WHEEL("Intake Wheel Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
     FEED("Feed Motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
+    BALLGATE("Ballgate Motor", new WsSparkMaxConfig(CANConstants.BALLGATE, true)),
    
 
     // ---------------------------------

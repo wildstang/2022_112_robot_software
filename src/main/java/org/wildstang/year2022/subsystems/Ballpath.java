@@ -28,12 +28,12 @@
 
 public class Ballpath implements Subsystem{
     
-    private WsDigitalInput Abutton, Ybutton, Xbutton;
+    private WsDigitalInput Abutton, Bbutton, Xbutton;
     private WsAnalogInput Trigger;
-    private WsSparkMax Wheel, Feed;
+    private WsSparkMax Wheel, Feed, Ballgate;
     private WsSolenoid Intake;
     public boolean intakeDeploy;
-    public double feedSpeed, wheelSpeed;
+    public double feedSpeed, wheelSpeed, gateSpeed;
     private enum feedStates{
         up, out, off;
     }
@@ -49,13 +49,14 @@ public class Ballpath implements Subsystem{
     Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+    Ballgate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALLGATE);
 
     Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
          Abutton.addInputListener(this);
     Xbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
          Xbutton.addInputListener(this);
-    Ybutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
-         Ybutton.addInputListener(this);
+    Bbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT);
+         Bbutton.addInputListener(this);
     Trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
     
@@ -67,7 +68,7 @@ public class Ballpath implements Subsystem{
 public void inputUpdate(Input source){
 
     if (Trigger.getValue() > 0.05){
-       feedState = feedStates.up;
+       gateSpeed = Trigger.getValue();
     }    
 
     else if(Trigger == source){
@@ -80,22 +81,28 @@ public void inputUpdate(Input source){
 
         if(intakeDeploy == false){
             wheelState = wheelStates.off;
+            feedState = feedStates.off;
         }
 
         else if(wheelState == wheelStates.off){
             wheelState = wheelStates.forward;
+            feedState = feedStates.up;
         }
 
     }
 
-    if (Ybutton.getValue() && source == Ybutton){
+    if (Bbutton.getValue() && source == Bbutton){
         
-        if(wheelState == wheelStates.forward){
-            wheelState = wheelStates.backward;
+        intakeDeploy = !intakeDeploy;
+
+        if(intakeDeploy == false){
+            wheelState = wheelStates.off;
+            feedState = feedStates.off;
         }
 
-        else if(wheelState == wheelStates.backward){
-            wheelState = wheelStates.forward;
+        else if(wheelState == wheelStates.off){
+            wheelState = wheelStates.backward;
+            feedState = feedStates.out;
         }
 
     }
@@ -104,10 +111,10 @@ public void inputUpdate(Input source){
     if(Xbutton.getValue() && source == Xbutton){
 
         if(feedState == feedStates.off){
-            feedState = feedStates.out;
+            feedState = feedStates.up;
         }
 
-        else if(feedState == feedStates.out){
+        else if(feedState == feedStates.up){
             feedState = feedStates.off;
         }
 
@@ -145,6 +152,7 @@ public void update(){
     Feed.setSpeed(feedSpeed);
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
+    Ballgate.setSpeed(gateSpeed);
 
 }
 
@@ -157,7 +165,8 @@ public void selfTest(){
 public void resetState() {
 
   feedSpeed = 0;
-  wheelSpeed= 0;
+  wheelSpeed = 0;
+  gateSpeed = 0;
   intakeDeploy = false;
   feedState = feedStates.off;
   wheelState = wheelStates.off;
