@@ -61,6 +61,8 @@ public class Tester implements Subsystem {
         hoodMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.HOOD_MOTOR);
         
         hoodMotor.setCurrentLimit(15, 15, 0);
+        climbLiftMotor.setCurrentLimit(50, 50, 0);
+        climbRotateMotor.setCurrentLimit(50, 50, 0);
 
         resetState();
     }
@@ -73,8 +75,8 @@ public class Tester implements Subsystem {
     public void update() {
         hoodMotor.setSpeed(hoodSpeed);
 
-        //climbRotateMotor.setSpeed(climbRotateSpeed);
-        //climbLiftMotor.setSpeed(climbLiftSpeed);    
+        climbRotateMotor.setSpeed(climbRotateSpeed);
+        climbLiftMotor.setSpeed(climbLiftSpeed);    
     }
 
     @Override
