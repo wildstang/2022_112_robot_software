@@ -11,6 +11,8 @@ import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
+import org.wildstang.hardware.roborio.outputs.config.WsDoubleSolenoidConfig;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -32,6 +34,9 @@ public enum WSOutputs implements Outputs {
     RIGHT_DRIVE("Right Drive Motor", new WsSparkMaxConfig(CANConstants.RIGHT_DRIVE, true)),
     LEFT_DRIVE_FOLLOWER("Left Drive Follower", new WsSparkMaxFollowerConfig("Left Drive Motor", CANConstants.LEFT_DRIVE_FOLLOWER, true)),
     RIGHT_DRIVE_FOLLOWER("Right Drive Follower", new WsSparkMaxFollowerConfig("Right Drive Motor", CANConstants.RIGHT_DRIVE_FOLLOWER, true)),
+
+    TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
+
     
     ARM_WHEEL("Intake Wheel Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
     FEED("Feed Motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
@@ -42,6 +47,7 @@ public enum WSOutputs implements Outputs {
     KICKER_MOTOR("Kicker Motor", new WsSparkMaxConfig(CANConstants.KICKER, true)),
 
     HOOD_MOTOR("Hood Motor", new WsSparkMaxConfig(CANConstants.HOOD, true)),
+
 
     CLIMB_LIFT("Climb Lift Motor", new WsSparkMaxConfig(CANConstants.CLIMBER, true)),
     CLIMB_LIFT_FOLLOWER("Climb Lift Follower", new WsSparkMaxFollowerConfig("Climb Lift Motor", CANConstants.CLIMBER_FOLLOWER, true, true)),
@@ -60,9 +66,15 @@ public enum WSOutputs implements Outputs {
     // ********************************
     // Solenoids
     // ********************************
+
+
+    TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+
+
     INTAKE("Intake Arm Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 6, false)),
     INTAKE_FOLLOWER("Intake Arm Solenoid Follower", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 7, false)),
     //CARGO_HATCH_SOLENOID("Cargo Hatch Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 1, false)),
+
     
     // ********************************
     // Relays
