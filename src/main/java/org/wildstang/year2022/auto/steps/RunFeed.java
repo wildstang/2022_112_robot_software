@@ -9,42 +9,46 @@ import frc.paths.*;
 
 
 public class RunFeed{
+
+    private Ballpath myBallpath;
    
-    @Override 
+
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
 
-    @Override
+
     public void update(){
     
         myBallpath.myfeedSpeed.setSpeed(1);
 
         if (myBallpath.myfeedSpeed.getVelocity() == 1){
-            getFinished(true);
+            setFinished(true);
         }
 
     }
 
 }
 public class StopFeed{
+
+    private Ballpath myBallpath;
    
-    @Override 
+
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
 
-    @Override
+
     public void update(){
     
         myBallpath.myfeedSpeed.setSpeed(0);
 
         if (myBallpath.myfeedSpeed.getVelocity() == 0){
-            getFinished(true);
+            setFinished(true);
         }
 
     }

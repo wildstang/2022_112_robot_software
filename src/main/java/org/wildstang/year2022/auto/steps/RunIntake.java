@@ -10,20 +10,22 @@ import frc.paths.*;
 
 public class IntakeForward{
    
-    @Override 
+    private Ballpath myBallpath;
+
+
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
 
-    @Override
+
     public void update(){
     
         myBallpath.mywheelSpeed.setSpeed(1);
 
         if (myBallpath.mywheelSpeed.getVelocity() == 1){
-            getFinished(true);
+            setFinished(true);
         }
     
 
@@ -32,21 +34,23 @@ public class IntakeForward{
 }
 
 public class IntakeOff{
+
+    private Ballpath myBallpath;
    
-    @Override 
+
     public void init(){
 
         myBallpath = Core.getSubsystemManager.getSubsystem(WSSubsystems.BALLPATH.getName());
 
     }
 
-    @Override
+
     public void update(){
     
         myBallpath.mywheelSpeed.setSpeed(0);
 
         if (myBallpath.mywheelSpeed.getVelocity() == 0){
-            getFinished(true);
+            setFinished(true);
         }
 
     }
