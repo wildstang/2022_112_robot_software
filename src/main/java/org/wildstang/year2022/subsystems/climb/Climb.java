@@ -26,7 +26,8 @@
 
  
  import edu.wpi.first.wpilibj.Notifier;
- import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.I2C;
 
 public class Climb implements Subsystem{
     
@@ -34,11 +35,17 @@ public class Climb implements Subsystem{
     private WsAnalogInput raise, rotate;
     private double raiseValue, rotateValue;
 
+    private final double RAISE_SPEED = 1.0;
+    private final double ROTATE_SPEED = 0.5;
+
     @Override
     public void init(){
 
         motorRaise = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_LIFT);
         motorRotate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLIMB_ROTATE);
+
+        motorRaise.setCurrentLimit(50, 50, 0);
+        motorRotate.setCurrentLimit(50, 50, 0);
 
         raise = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
         raise.addInputListener(this);
@@ -52,9 +59,9 @@ public class Climb implements Subsystem{
     @Override
     public void inputUpdate(Input source){
 
-        if(Math.abs(raise.getValue()) > 0.05){
+        if(Math.abs(raise.getValue()) > 0.2){
 
-            raiseValue = raise.getValue();
+            raiseValue = RAISE_SPEED * raise.getValue();
 
         } 
         else{
@@ -63,9 +70,9 @@ public class Climb implements Subsystem{
 
         }
 
-        if(Math.abs(rotate.getValue()) > 0.05){
+        if(Math.abs(rotate.getValue()) > 0.2){
 
-            rotateValue = rotate.getValue();
+            rotateValue = ROTATE_SPEED * rotate.getValue();
 
         }
         else{
@@ -82,6 +89,9 @@ public class Climb implements Subsystem{
 
         motorRaise.setSpeed(raiseValue);
         motorRotate.setSpeed(rotateValue);
+
+        SmartDashboard.putNumber("Climb raise enc", motorRaise.getPosition());
+        SmartDashboard.putNumber("Climb rotate enc", motorRotate.getPosition());
 
     }
 
