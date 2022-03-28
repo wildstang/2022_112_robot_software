@@ -14,6 +14,7 @@ import org.wildstang.year2022.robot.WSOutputs;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class Drive extends PathFollowingDrive {
 
@@ -31,7 +32,7 @@ public class Drive extends PathFollowingDrive {
     private DriveSignal signal;
 
     private WSDriveHelper helper = new WSDriveHelper();
-    private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
+    private final AHRS gyro = new AHRS(SerialPort.Port.kOnboard);
 
     private final double INVERT = -1.0;
 
