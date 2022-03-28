@@ -67,58 +67,42 @@ public class Ballpath implements Subsystem{
 @Override
 public void inputUpdate(Input source){
 
-    if (Trigger.getValue() > 0.05){
-       gateSpeed = Trigger.getValue();
+    if (Trigger.getValue() > 0.25){
+       gateSpeed = 1;
     }    
-
-    else if(Trigger == source){
-        feedState = feedStates.off;
+    else {
+        gateSpeed = 0;
     }
 
-    if (Abutton.getValue() && source == Abutton){
 
-        intakeDeploy = !intakeDeploy;
+    if (Abutton.getValue()){
 
-        if(intakeDeploy == false){
-            wheelState = wheelStates.off;
-            feedState = feedStates.off;
-        }
-
-        else if(wheelState == wheelStates.off){
-            wheelState = wheelStates.forward;
-            feedState = feedStates.up;
-        }
+        intakeDeploy = true;
+        wheelState = wheelStates.forward;
+        feedState = feedStates.up;
 
     }
 
-    if (Bbutton.getValue() && source == Bbutton){
+    if (Bbutton.getValue()){
         
-        intakeDeploy = !intakeDeploy;
+        intakeDeploy = true;
+        wheelState = wheelStates.backward;
+        feedState = feedStates.out;
+    }
 
-        if(intakeDeploy == false){
-            wheelState = wheelStates.off;
-            feedState = feedStates.off;
-        }
+    if(Xbutton.getValue()){
 
-        else if(wheelState == wheelStates.off){
-            wheelState = wheelStates.backward;
-            feedState = feedStates.out;
-        }
+        feedState = feedStates.up;
 
     }
 
+    if(feedState != feedStates.off && (!Abutton.getValue() && !Bbutton.getValue() && !Xbutton.getValue())){
 
-    if(Xbutton.getValue() && source == Xbutton){
-
-        if(feedState == feedStates.off){
-            feedState = feedStates.up;
-        }
-
-        else if(feedState == feedStates.up){
-            feedState = feedStates.off;
-        }
+        feedState = feedStates.off;
+        wheelState = wheelStates.off;
 
     }
+
 
     if(feedState == feedStates.up){
         feedSpeed = 1;
