@@ -9,7 +9,7 @@ import frc.paths.*;
 
 
 
-public class IntakeExtend{
+public class IntakeExtend {
 
     private Ballpath myBallpath;
 
@@ -23,9 +23,9 @@ public class IntakeExtend{
 
     public void update(){
 
-        myBallpath.intakeDeploy().setValue(true);
+        myBallpath.intakeDeploy = true;
 
-        if (myBallpath.myintakeDeploy.getValue() == true){
+        if (myBallpath.intakeDeploy == true){
             this.setFinished(true);
         }
 

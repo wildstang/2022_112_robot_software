@@ -22,9 +22,9 @@ public class IntakeOff{
 
     public void update(){
     
-        myBallpath.mywheelSpeed.setSpeed(0);
+        myBallpath.wheelSpeed = 0;
 
-        if (myBallpath.mywheelSpeed.getVelocity() == 0){
+        if (myBallpath.wheelSpeed == 0){
             this.setFinished(true);
         }
 

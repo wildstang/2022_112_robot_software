@@ -22,9 +22,9 @@ public class IntakeForward{
 
     public void update(){
     
-        myBallpath.mywheelSpeed.setSpeed(1);
+        myBallpath.wheelSpeed = 1;
 
-        if (myBallpath.mywheelSpeed.getVelocity() == 1){
+        if (myBallpath.wheelSpeed == 1){
             this.setFinished(true);
         }
     

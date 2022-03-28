@@ -22,9 +22,9 @@ public class RunFeed{
 
     public void update(){
     
-        myBallpath.myfeedSpeed.setSpeed(1);
+        myBallpath.feedSpeed = 1;
 
-        if (myBallpath.myfeedSpeed.getVelocity() == 1){
+        if (myBallpath.feedSpeed == 1){
             this.setFinished(true);
         }
 

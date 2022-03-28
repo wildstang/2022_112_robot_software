@@ -21,9 +21,9 @@ public class StopFeed{
 
     public void update(){
     
-        myBallpath.myfeedSpeed.setSpeed(0);
+        myBallpath.feedSpeed = 0;
 
-        if (myBallpath.myfeedSpeed.getVelocity() == 0){
+        if (myBallpath.feedSpeed == 0){
             this.setFinished(true);
         }
 

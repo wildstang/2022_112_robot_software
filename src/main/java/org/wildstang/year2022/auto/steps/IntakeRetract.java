@@ -23,9 +23,9 @@ public class IntakeRetract{
 
     public void update(){
 
-        myBallpath.myintakeDeploy.setValue(false);
+        myBallpath.intakeDeploy = false;
 
-        if (myBallpath.myintakeDeploy.getValue() == false){
+        if (myBallpath.intakeDeploy == false){
             this.setFinished(true);
         }
 
