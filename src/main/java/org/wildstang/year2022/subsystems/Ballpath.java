@@ -1,171 +1,124 @@
 
  package org.wildstang.year2022.subsystems;
 
- import com.ctre.phoenix.motion.MotionProfileStatus;
- import com.kauailabs.navx.frc.AHRS;
- 
- import org.wildstang.framework.core.Core;
- import com.revrobotics.CANSparkMax;
- import org.wildstang.framework.io.inputs.Input;
- import org.wildstang.framework.logger.Log;
- import org.wildstang.framework.pid.PIDConstants;
- import org.wildstang.framework.subsystems.drive.Path;
- import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
- import org.wildstang.framework.subsystems.drive.TankPath;
- import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
- import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
- import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
- import org.wildstang.hardware.roborio.outputs.WsPhoenix;
- import org.wildstang.hardware.roborio.outputs.WsSparkMax;
- import org.wildstang.hardware.roborio.outputs.WsSolenoid;
- import org.wildstang.year2022.robot.WSInputs;
- import org.wildstang.year2022.robot.WSOutputs;
- import org.wildstang.framework.subsystems.Subsystem;
- 
- import edu.wpi.first.wpilibj.Notifier;
- import edu.wpi.first.wpilibj.I2C;
+import org.wildstang.framework.core.Core;
+import org.wildstang.framework.io.inputs.Input;
+import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
+import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
+import org.wildstang.hardware.roborio.outputs.WsSolenoid;
+import org.wildstang.hardware.roborio.outputs.WsSparkMax;
+import org.wildstang.year2022.robot.WSInputs;
+import org.wildstang.year2022.robot.WSOutputs;
 
 
-public class Ballpath implements Subsystem{
+public class Ballpath implements Subsystem {
     
-    private WsDigitalInput Abutton, Ybutton, Xbutton;
-    private WsAnalogInput Trigger;
-    private WsSparkMax Wheel, Feed;
-    private WsSolenoid Intake;
-    private boolean intakeDeploy;
-    private double feedSpeed, wheelSpeed;
-    private enum feedStates{
-        up, out, off;
-    }
-    private feedStates feedState;
-    private enum wheelStates{
-        forward, backward, off;
-    }
-    private wheelStates wheelState;
+    //inputs
+    private WsDigitalInput aButton, bButton, xButton; //buttons
+    private WsAnalogInput trigger; //trigger
+
+    //outputs
+    private WsSparkMax intakeMotor, feed, ballgate; //motors
+    private WsSolenoid intakeSolenoid; //solenoid
+
+
 
  @Override
  public void init(){
 
-    Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
-    Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
-    Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+    intakeSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE); //init intake solenoid
 
-    Abutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
-         Abutton.addInputListener(this);
-    Xbutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
-         Xbutton.addInputListener(this);
-    Ybutton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
-         Ybutton.addInputListener(this);
-    Trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
-         Trigger.addInputListener(this);
+    intakeMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL); //init intake motor
+
+    ballgate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALLGATE); //init ballgate motor
+
+    feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED); //init feed motor
+
+    aButton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT); //init A Button
+    aButton.addInputListener(this); //A Button inputListener
+
+    xButton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP); //init X Button
+    xButton.addInputListener(this); //X Button inputListener
+
+    bButton = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN); //init B Button
+    bButton.addInputListener(this); //B Button inputListener
+
+    trigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER); //init trigger
+    trigger.addInputListener(this); //trigger inputListener
     
-    resetState();
-
-}
-
-@Override
-public void inputUpdate(Input source){
-
-    if (Trigger.getValue() > 0.05){
-       feedState = feedStates.up;
-    }    
-
-    else if(Trigger == source){
-        feedState = feedStates.off;
-    }
-
-    if (Abutton.getValue() && source == Abutton){
-
-        intakeDeploy = !intakeDeploy;
-
-        if(intakeDeploy == false){
-            wheelState = wheelStates.off;
-        }
-
-        else if(wheelState == wheelStates.off){
-            wheelState = wheelStates.forward;
-        }
+    resetState(); //go to def state when subsystem is initialized
 
     }
 
-    if (Ybutton.getValue() && source == Ybutton){
-        
-        if(wheelState == wheelStates.forward){
-            wheelState = wheelStates.backward;
-        }
+    @Override
+    public void inputUpdate(Input source){
 
-        else if(wheelState == wheelStates.backward){
-            wheelState = wheelStates.forward;
-        }
+        if (aButton.getValue()) { //if A button is pressed
 
-    }
+            intakeSolenoid.setValue(true); //deploy intake
+            intakeMotor.setValue(1); //run intake
+            feed.setValue(1); //run feed
 
+        } else if (aButton.getValue() == false) { //if A button is un-pressed
 
-    if(Xbutton.getValue() && source == Xbutton){
+            intakeSolenoid.setValue(false); //un-deploy intake
+            intakeMotor.stop(); //stop intake
+            feed.stop(); //stop feed
 
-        if(feedState == feedStates.off){
-            feedState = feedStates.out;
-        }
+        } else if (xButton.getValue()) { //if X button is pressed
 
-        else if(feedState == feedStates.out){
-            feedState = feedStates.off;
+            feed.setValue(1); //run feed
+
+        } else if (xButton.getValue() == false) { //if X button is un-pressed
+
+            feed.stop(); //stop feed
+
+        } else if (bButton.getValue()) { //if B button is pressed
+
+            intakeSolenoid.setValue(true); //deploy intake
+            intakeMotor.setValue(-1); //run intake backwards
+            feed.setValue(-1); //run feed backwards
+
+        } else if (bButton.getValue() == false) { //if B button is un-pressed
+
+            intakeSolenoid.setValue(false); //un-deploy intake
+            intakeMotor.stop(); //stop intake
+            feed.stop(); //stop feed
+
         }
 
     }
 
-    if(feedState == feedStates.up){
-        feedSpeed = 1;
+    @Override
+    public void update(){
+
+        ballgate.setValue(trigger.getValue()); //set ballgate motor speed to the trigger value
+
     }
 
-    if(feedState == feedStates.out){
-        feedSpeed = -1;
+    @Override
+    public void selfTest(){
+
+        //hmmm, what to do here?
+
     }
 
-    if(feedState == feedStates.off){
-        feedSpeed = 0;
+    @Override
+    public void resetState() {
+
+        intakeMotor.stop(); //stop intake motor
+        feed.stop(); //stop feed motor
+        ballgate.stop(); //stop ballgate motor
+        intakeSolenoid.setValue(false); //retract intake solenoid
+
     }
 
-    if(wheelState == wheelStates.forward){
-        wheelSpeed = 1;
+    @Override
+    public String getName(){
+
+        return "Ballpath";
+
     }
-
-    if(wheelState == wheelStates.backward){
-        wheelSpeed = -1;
-    }
-
-    if(wheelState == wheelStates.off){
-        wheelSpeed = 0;
-    }
-
-}
-
-@Override
-public void update(){
-
-    Feed.setSpeed(feedSpeed);
-    Wheel.setSpeed(wheelSpeed);
-    Intake.setValue(intakeDeploy);
-
-}
-
-@Override
-public void selfTest(){
-
-}
-
-@Override
-public void resetState() {
-
-  feedSpeed = 0;
-  wheelSpeed= 0;
-  intakeDeploy = false;
-  feedState = feedStates.off;
-  wheelState = wheelStates.off;
-}
-
-@Override
-public String getName(){
-    return "Ballpath";
-}
 
 }
