@@ -3,18 +3,10 @@ package org.wildstang.year2022.robot;
 // expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsServoConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsPhoenixConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsI2COutputConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsMotorControllers;
-import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsDoubleSolenoidConfig;
-import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**

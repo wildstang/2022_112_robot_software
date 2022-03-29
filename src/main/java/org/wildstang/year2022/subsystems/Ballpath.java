@@ -1,43 +1,27 @@
-
- package org.wildstang.year2022.subsystems;
-
- import com.ctre.phoenix.motion.MotionProfileStatus;
- import com.kauailabs.navx.frc.AHRS;
+package org.wildstang.year2022.subsystems;
  
- import org.wildstang.framework.core.Core;
- import com.revrobotics.CANSparkMax;
+import org.wildstang.framework.core.Core;
 
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.inputs.Input;
- import org.wildstang.framework.logger.Log;
- import org.wildstang.framework.pid.PIDConstants;
- import org.wildstang.framework.subsystems.drive.Path;
- import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
- import org.wildstang.framework.subsystems.drive.TankPath;
- import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
- import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
- import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
- import org.wildstang.hardware.roborio.outputs.WsPhoenix;
- import org.wildstang.hardware.roborio.outputs.WsSparkMax;
- import org.wildstang.hardware.roborio.outputs.WsSolenoid;
- import org.wildstang.year2022.robot.WSInputs;
- import org.wildstang.year2022.robot.WSOutputs;
- import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.roborio.outputs.WsSparkMax;
+import org.wildstang.hardware.roborio.outputs.WsSolenoid;
+import org.wildstang.year2022.robot.WSInputs;
+import org.wildstang.year2022.robot.WSOutputs;
+import org.wildstang.framework.subsystems.Subsystem;
  
- import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.I2C;
 
 
-public class Ballpath implements Subsystem{
+public class Ballpath implements Subsystem {
     
-    private DigitalInput Abutton, Ybutton, Xbutton;
+    private DigitalInput Abutton, Bbutton, Xbutton;
     private AnalogInput Trigger;
     private WsSparkMax Wheel, Feed, Ball_Gate;
     private WsSolenoid Intake, Intake2;
     private boolean intakeDeploy;
-    private double feedSpeed, wheelSpeed;
+    private double feedSpeed, wheelSpeed, gateSpeed;
     private enum feedStates{
         up, out, off;
     }
@@ -63,8 +47,8 @@ public class Ballpath implements Subsystem{
          Abutton.addInputListener(this);
     Xbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
          Xbutton.addInputListener(this);
-    Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
-         Ybutton.addInputListener(this);
+    Bbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT);
+         Bbutton.addInputListener(this);
     Trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
     
@@ -75,24 +59,45 @@ public class Ballpath implements Subsystem{
 @Override
 public void inputUpdate(Input source){
 
+    if (Trigger.getValue() > 0.25){
+       gateSpeed = 1;
+    }    
+    else {
+        gateSpeed = 0;
+    }
+
+
     if (Abutton.getValue()){
 
         intakeDeploy = true;
         wheelState = wheelStates.forward;
-    } else {
+        feedState = feedStates.up;
+
+    }
+
+    else if (Bbutton.getValue()){
+        
+        intakeDeploy = true;
+        wheelState = wheelStates.backward;
+        feedState = feedStates.out;
+    }
+
+    else if(Xbutton.getValue()){
+
         intakeDeploy = false;
         wheelState = wheelStates.off;
-    }
-
-
-    if (Ybutton.getValue()){
-        
-        feedState = feedStates.out;
-    } else if (Xbutton.getValue() || Math.abs(Trigger.getValue()) > 0.15){
         feedState = feedStates.up;
-    } else {
-        feedState = feedStates.off;
+
     }
+
+    else {
+    
+        intakeDeploy = false;
+        feedState = feedStates.off;
+        wheelState = wheelStates.off;
+
+    }
+
 
     if(feedState == feedStates.up){
         feedSpeed = 1;
@@ -129,6 +134,7 @@ public void update(){
     Intake2.setValue(intakeDeploy);
 
     SmartDashboard.putNumber("Intake", wheelSpeed);
+    Ball_Gate.setSpeed(gateSpeed);
 
 }
 
@@ -141,7 +147,8 @@ public void selfTest(){
 public void resetState() {
 
   feedSpeed = 0;
-  wheelSpeed= 0;
+  wheelSpeed = 0;
+  gateSpeed = 0;
   intakeDeploy = false;
   feedState = feedStates.off;
   wheelState = wheelStates.off;

@@ -21,7 +21,7 @@ public final class CANConstants {
     public static final int RIGHT_DRIVE_FOLLOWER = 14;
     
     public static final int INTAKE = 20;
-    public static final int FEED = 21;
+    public static final int FEED = 30;
     public static final int KICKER = 22;
     public static final int SHOOTER = 23;
     public static final int SHOOTER_FOLLOWER = 24;
@@ -32,7 +32,7 @@ public final class CANConstants {
     public static final int CLIMBER_ROTATE = 26;
     public static final int CLIMBER_ROTATE_FOLLOWER = 27;
 
-    public static final int BALL_GATE = 30;
+    public static final int BALL_GATE = 21;
 
     
 }
