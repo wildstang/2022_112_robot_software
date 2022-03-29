@@ -32,7 +32,7 @@ public class Drive extends PathFollowingDrive {
     private DriveSignal signal;
 
     private WSDriveHelper helper = new WSDriveHelper();
-    private final AHRS gyro = new AHRS(SerialPort.Port.kOnboard);
+    //private final AHRS gyro = new AHRS(SerialPort.Port.kOnboard);
 
     private final double INVERT = -1.0;
 
@@ -118,8 +118,8 @@ public class Drive extends PathFollowingDrive {
             state = DriveState.TELEOP;
         }
         if (source == gyroReset && gyroReset.getValue()){
-            gyro.reset();
-            gyro.setAngleAdjustment(0.0);
+            //gyro.reset();
+            //gyro.setAngleAdjustment(0.0);
         }
 
     }
@@ -155,9 +155,9 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void updatePathFollower(double[] trajectoryInfo) {
-        signal = helper.autoDrive(trajectoryInfo[5], trajectoryInfo[13], trajectoryInfo[8], trajectoryInfo[16], 
-            (left.getPosition()+right.getPosition())/2.0, gyro.getAngle());
-        drive(signal);
+        //signal = helper.autoDrive(trajectoryInfo[5], trajectoryInfo[13], trajectoryInfo[8], trajectoryInfo[16], 
+            //(left.getPosition()+right.getPosition())/2.0, gyro.getAngle());
+        //drive(signal);
     }
 
     public void drive(DriveSignal commandSignal){
@@ -173,8 +173,8 @@ public class Drive extends PathFollowingDrive {
     }
 
     public void setGyro(double degrees){
-        gyro.reset();
-        gyro.setAngleAdjustment(degrees);
+        //gyro.reset();
+        //gyro.setAngleAdjustment(degrees);
     }
 
     private double getTriggerThrottle(){
