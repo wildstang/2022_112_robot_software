@@ -82,27 +82,22 @@ public void inputUpdate(Input source){
         feedState = feedStates.up;
 
     }
-
-    if (Bbutton.getValue()){
+    else if (Bbutton.getValue()){
         
         intakeDeploy = true;
         wheelState = wheelStates.backward;
         feedState = feedStates.out;
     }
-
-    if(Xbutton.getValue()){
+    else if (Xbutton.getValue()){
 
         feedState = feedStates.up;
 
     }
-
-    if(feedState != feedStates.off && (!Abutton.getValue() && !Bbutton.getValue() && !Xbutton.getValue())){
-
+    else {
+        intakeDeploy = false;
         feedState = feedStates.off;
         wheelState = wheelStates.off;
-
     }
-
 
     if(feedState == feedStates.up){
         feedSpeed = 1;
