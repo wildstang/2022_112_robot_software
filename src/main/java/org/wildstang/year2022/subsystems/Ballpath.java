@@ -20,7 +20,9 @@ public class Ballpath implements Subsystem {
 
     //outputs
     private WsSparkMax intakeMotor, feed, ballgate; //motors
+    private double intakeMotorSpeed, feedSpeed, ballgateSpeed; //motor speeds
     private WsSolenoid intakeSolenoid; //solenoid
+    private boolean intakeSolenoidState; //solenoid state
 
 
 
@@ -56,35 +58,39 @@ public class Ballpath implements Subsystem {
 
         if (aButton.getValue()) { //if A button is pressed
 
-            intakeSolenoid.setValue(true); //deploy intake
-            intakeMotor.setValue(1); //run intake
-            feed.setValue(1); //run feed
+            intakeSolenoidState = true;
+            intakeMotorSpeed = 1; //run intake
+            feedSpeed = 1; //run feed
 
         } else if (aButton.getValue() == false) { //if A button is un-pressed
 
-            intakeSolenoid.setValue(false); //un-deploy intake
-            intakeMotor.stop(); //stop intake
-            feed.stop(); //stop feed
+            intakeSolenoidState = false; //un-deploy intake
+            intakeMotorSpeed = 0; //stop intake
+            feedSpeed = 0; //stop feed
 
         } else if (xButton.getValue()) { //if X button is pressed
 
-            feed.setValue(1); //run feed
+            feedSpeed = 1; //run feed
 
         } else if (xButton.getValue() == false) { //if X button is un-pressed
 
-            feed.stop(); //stop feed
+            feedSpeed = 0; //stop feed
 
         } else if (bButton.getValue()) { //if B button is pressed
 
-            intakeSolenoid.setValue(true); //deploy intake
-            intakeMotor.setValue(-1); //run intake backwards
-            feed.setValue(-1); //run feed backwards
+            intakeSolenoidState = true; //deploy intake
+            intakeMotorSpeed = -1; //run intake backwards
+            feedSpeed = -1; //run feed backwards
 
         } else if (bButton.getValue() == false) { //if B button is un-pressed
 
-            intakeSolenoid.setValue(false); //un-deploy intake
-            intakeMotor.stop(); //stop intake
-            feed.stop(); //stop feed
+            intakeSolenoidState = false; //un-deploy intake
+            intakeMotorSpeed = 0; //stop intake
+            feedSpeed = 0; //stop feed
+
+        } else if (source == trigger) {
+
+            ballgateSpeed = trigger.getValue()
 
         }
 
@@ -93,7 +99,10 @@ public class Ballpath implements Subsystem {
     @Override
     public void update(){
 
-        ballgate.setValue(trigger.getValue()); //set ballgate motor speed to the trigger value
+        intakeMotor.setValue(intakeMotorSpeed);
+        feed.setValue(feedSpeed);
+        ballgate.setValue(ballgateSpeed);
+        intakeSolenoid.setValue(intakeSolenoidState);
 
     }
 
@@ -107,10 +116,10 @@ public class Ballpath implements Subsystem {
     @Override
     public void resetState() {
 
-        intakeMotor.stop(); //stop intake motor
-        feed.stop(); //stop feed motor
-        ballgate.stop(); //stop ballgate motor
-        intakeSolenoid.setValue(false); //retract intake solenoid
+        intakeMotorSpeed = 0; //stop intake motor
+        feedSpeed = 0; //stop feed motor
+        ballgateSpeed = 0; //stop ballgate motor
+        intakeSolenoidState = false; //retract intake solenoid
 
     }
 
