@@ -28,16 +28,10 @@ public class deployIntake extends AutoStep {
     public void update(){
 
         if (position){
-            myBallpath.intakeDeploy = true;
-            myBallpath.wheelSpeed = 1;
-            myBallpath.feedSpeed = 1;
-            myBallpath.gateSpeed = 1;
+            myBallpath.startBallpath();
         }
         else{
-            myBallpath.intakeDeploy = false;
-            myBallpath.wheelSpeed = 0;
-            myBallpath.feedSpeed = 0;
-            myBallpath.gateSpeed = 0;
+            myBallpath.stopBallpath();
         }
         setFinished(true);
 
