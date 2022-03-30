@@ -1,27 +1,18 @@
 package org.wildstang.year2022.subsystems.drive;
-
-import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.wildstang.framework.core.Core;
-import com.revrobotics.CANSparkMax;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.Input;
-import org.wildstang.framework.logger.Log;
 import org.wildstang.framework.pid.PIDConstants;
-import org.wildstang.framework.subsystems.drive.Path;
 import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
-import org.wildstang.framework.subsystems.drive.TankPath;
-import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
-import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
-import org.wildstang.hardware.roborio.outputs.WsPhoenix;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
-
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Drive extends PathFollowingDrive {
@@ -31,10 +22,12 @@ public class Drive extends PathFollowingDrive {
     private WsSparkMax left, right;
     private WsJoystickAxis throttleJoystick, headingJoystick;
     private WsJoystickButton baseLock, gyroReset;
+    private AnalogInput rightTrigger, leftTrigger;
     private DriveState state;
 
     private double heading;
     private double throttle;
+    private double backThrottle;
     private DriveSignal signal;
 
     private WSDriveHelper helper = new WSDriveHelper();
@@ -42,12 +35,17 @@ public class Drive extends PathFollowingDrive {
 
     private final double INVERT = -1.0;
 
+    //private SlewRateLimiter limiter = new SlewRateLimiter(3);
+    //private SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
+
     @Override
     public void init() {
         left = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.LEFT_DRIVE);
         right = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.RIGHT_DRIVE);
         motorSetUp(left);
         motorSetUp(right);
+        left.getController().setOpenLoopRampRate(2);
+        right.getController().setOpenLoopRampRate(2);
         throttleJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_JOYSTICK_Y);
         throttleJoystick.addInputListener(this);
         headingJoystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
@@ -56,31 +54,42 @@ public class Drive extends PathFollowingDrive {
         baseLock.addInputListener(this);
         gyroReset = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         gyroReset.addInputListener(this);
+        rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
+        rightTrigger.addInputListener(this);
+        leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
+        leftTrigger.addInputListener(this);
         resetState();
     }
 
     @Override
     public void selfTest() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void update() {
         if (state == DriveState.TELEOP){
-            signal = helper.teleopDrive(throttle, heading);
+            //if (Math.abs(rightTrigger.getValue()) < 0.15 && Math.abs(leftTrigger.getValue()) < 0.15) throttle = 0;
+            if (Math.abs(throttle) < Math.abs(backThrottle)){
+                signal = helper.teleopDrive(0.75*backThrottle, 0.5*heading);
+            } else {
+                signal = helper.teleopDrive(0.75*throttle, 0.5*heading);
+            }
             drive(signal);
         } else if (state == DriveState.BASELOCK){
             left.setPosition(left.getPosition());
             right.setPosition(right.getPosition());
         } 
         SmartDashboard.putString("drive state",state.toString());
+        SmartDashboard.putNumber("drive throttle", throttle);
+        SmartDashboard.putNumber("drive back throttle", backThrottle);
     }
 
     @Override
     public void resetState() {
         state = DriveState.TELEOP;
         throttle = 0.0;
+        backThrottle = 0;
         heading = 0.0;
         signal = new DriveSignal(0.0, 0.0);
         setBrakeMode(false);
@@ -94,8 +103,14 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void inputUpdate(Input source) {
-        heading = -headingJoystick.getValue();
-        throttle = -throttleJoystick.getValue();
+        // heading = -headingJoystick.getValue();
+        heading = -headingJoystick.getValue() * Math.pow(Math.abs(headingJoystick.getValue()), headingJoystick.getValue());
+        // throttle = -throttleJoystick.getValue();
+       // throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
+       //throttle = -getTriggerThrottle();
+       throttle = -Math.pow(Math.abs(rightTrigger.getValue()), 2);
+       backThrottle = Math.pow(Math.abs(leftTrigger.getValue()), 2);
+       
         if (baseLock.getValue()){
             state = DriveState.BASELOCK;
         } else {
@@ -145,10 +160,8 @@ public class Drive extends PathFollowingDrive {
     }
 
     public void drive(DriveSignal commandSignal){
-        //left.setSpeed(INVERT * commandSignal.leftMotor);
-        //right.setSpeed(commandSignal.rightMotor);
-        left.setSpeed(-1.0);
-        right.setSpeed(1.0);
+        left.setSpeed(INVERT * commandSignal.leftMotor);
+        right.setSpeed(commandSignal.rightMotor);
     }
 
     private void motorSetUp(WsSparkMax setupMotor){
@@ -161,6 +174,16 @@ public class Drive extends PathFollowingDrive {
     public void setGyro(double degrees){
         gyro.reset();
         gyro.setAngleAdjustment(degrees);
+    }
+
+    private double getTriggerThrottle(){
+        if (Math.abs(rightTrigger.getValue()) > 0.15){
+            return Math.pow(Math.abs(rightTrigger.getValue()), 2);
+        } else if (Math.abs(leftTrigger.getValue()) > 0.15) {
+            return -Math.pow(Math.abs(leftTrigger.getValue()), 2);
+        } else {
+            return 0.0;
+        }
     }
 
 }
