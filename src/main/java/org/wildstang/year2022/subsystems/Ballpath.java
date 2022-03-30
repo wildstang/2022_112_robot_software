@@ -101,11 +101,11 @@ public void inputUpdate(Input source){
 
 
     if(feedState == feedStates.up){
-        feedSpeed = 1;
+        feedSpeed = -1;
     }
 
     if(feedState == feedStates.out){
-        feedSpeed = -1;
+        feedSpeed = 1;
     }
 
     if(feedState == feedStates.off){
