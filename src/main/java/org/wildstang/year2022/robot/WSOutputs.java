@@ -66,7 +66,8 @@ public enum WSOutputs implements Outputs {
 
     //INTAKE("Intake Arm Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
     //INTAKE_FOLLOWER("Intake Arm Solenoid Follower", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 1, false)),
-    
+    //CARGO_HATCH_SOLENOID("Cargo Hatch Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 1, false)),
+
     // ********************************
     // Relays
     // ********************************
