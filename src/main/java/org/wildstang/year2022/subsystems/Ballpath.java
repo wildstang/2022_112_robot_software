@@ -95,7 +95,7 @@ public void inputUpdate(Input source){
         feedState = feedStates.up;
 
     }
-    else if (Bbutton.getValue()){
+    else if (Ybutton.getValue()){
         
         intakeDeploy = true;
         wheelState = wheelStates.backward;
@@ -146,7 +146,7 @@ public void update(){
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
     Intake2.setValue(intakeDeploy);
-    Ball_gate.setSpeed(gateSpeed);
+    Ball_Gate.setSpeed(gateSpeed);
     SmartDashboard.putNumber("Intake", wheelSpeed);
 
 
