@@ -6,7 +6,9 @@
  
  import org.wildstang.framework.core.Core;
  import com.revrobotics.CANSparkMax;
- import org.wildstang.framework.io.inputs.Input;
+
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.Input;
  import org.wildstang.framework.logger.Log;
  import org.wildstang.framework.pid.PIDConstants;
  import org.wildstang.framework.subsystems.drive.Path;
@@ -32,7 +34,7 @@ import edu.wpi.first.wpilibj.I2C;
 public class Climb implements Subsystem{
     
     private WsSparkMax motorRaise, motorRotate;
-    private WsAnalogInput raise, rotate;
+    private AnalogInput raise, rotate;
     private double raiseValue, rotateValue;
 
     private final double RAISE_SPEED = 1.0;
@@ -47,9 +49,9 @@ public class Climb implements Subsystem{
         motorRaise.setCurrentLimit(50, 50, 0);
         motorRotate.setCurrentLimit(50, 50, 0);
 
-        raise = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
+        raise = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
         raise.addInputListener(this);
-        rotate = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_X);
+        rotate = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_X);
         rotate.addInputListener(this);
 
         resetState();

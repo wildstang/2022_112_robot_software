@@ -19,7 +19,7 @@ public class Ballpath implements Subsystem {
     private DigitalInput Abutton, Bbutton, Xbutton;
     private AnalogInput Trigger;
     private WsSparkMax Wheel, Feed, Ball_Gate;
-    private WsSolenoid Intake, Intake2;
+    //private WsSolenoid Intake;//, Intake2;
     private boolean intakeDeploy;
     private double feedSpeed, wheelSpeed, gateSpeed;
     private enum feedStates{
@@ -34,8 +34,8 @@ public class Ballpath implements Subsystem {
  @Override
  public void init(){
 
-    Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
-    Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
+    //Intake = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE);
+    //Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
     Ball_Gate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALL_GATE);
@@ -59,7 +59,8 @@ public class Ballpath implements Subsystem {
 @Override
 public void inputUpdate(Input source){
 
-    if (Trigger.getValue() > 0.25){
+    
+    if (Math.abs(Trigger.getValue()) > 0.25){
        gateSpeed = 1;
     }    
     else {
@@ -130,11 +131,14 @@ public void update(){
 
     Feed.setSpeed(feedSpeed);
     Wheel.setSpeed(wheelSpeed);
-    Intake.setValue(intakeDeploy);
-    Intake2.setValue(intakeDeploy);
+    //Intake.setValue(intakeDeploy);
+    //Intake2.setValue(intakeDeploy);
+
+    Ball_Gate.setSpeed(gateSpeed);
 
     SmartDashboard.putNumber("Intake", wheelSpeed);
-    Ball_Gate.setSpeed(gateSpeed);
+    SmartDashboard.putNumber("Feed", feedSpeed);
+    SmartDashboard.putNumber("Gate", gateSpeed);
 
 }
 
