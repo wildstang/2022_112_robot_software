@@ -104,6 +104,8 @@ public void inputUpdate(Input source){
     else if (Xbutton.getValue()){
 
         feedState = feedStates.up;
+        intakeDeploy = false;
+        wheelState = wheelStates.off; 
 
     }
     else {
@@ -114,11 +116,11 @@ public void inputUpdate(Input source){
     }
 
     if(feedState == feedStates.up){
-        feedSpeed = 1;
+        feedSpeed = -1;
     }
 
     if(feedState == feedStates.out){
-        feedSpeed = -1;
+        feedSpeed = 1;
     }
 
     if(feedState == feedStates.off){
