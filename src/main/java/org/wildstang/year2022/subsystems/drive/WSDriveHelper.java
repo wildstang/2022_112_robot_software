@@ -9,7 +9,7 @@ public class WSDriveHelper {
 
     public DriveSignal teleopDrive(double throttle, double heading) {
 
-        heading = handleDeadband(heading, DEADBAND);
+        //heading = handleDeadband(heading, DEADBAND);
         throttle = handleDeadband(throttle, DEADBAND);
 
         double rightPwm = throttle - heading;
