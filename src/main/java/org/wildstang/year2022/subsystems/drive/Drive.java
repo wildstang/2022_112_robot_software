@@ -6,6 +6,7 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.pid.PIDConstants;
 import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
+import org.wildstang.hardware.roborio.inputs.WsDPadButton;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
@@ -22,7 +23,8 @@ public class Drive extends PathFollowingDrive {
 
     private WsSparkMax left, right;
     private WsJoystickAxis throttleJoystick, headingJoystick;
-    private WsJoystickButton baseLock, gyroReset, turnSlow;
+    private WsJoystickButton baseLock, gyroReset;
+    private WsDPadButton turnSlow;
     private AnalogInput rightTrigger, leftTrigger;
     private DriveState state;
 
@@ -55,7 +57,7 @@ public class Drive extends PathFollowingDrive {
         baseLock.addInputListener(this);
         gyroReset = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         gyroReset.addInputListener(this);
-        turnSlow = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_LEFT);
+        turnSlow = (WsDPadButton) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_LEFT);
         turnSlow.addInputListener(this);
         rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
         rightTrigger.addInputListener(this);
