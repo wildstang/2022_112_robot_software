@@ -6,6 +6,12 @@ import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+
 import org.wildstang.hardware.roborio.outputs.WsSolenoid;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
@@ -30,6 +36,10 @@ public class Launcher implements Subsystem {
     //Trigger
     AnalogInput trigger, readyTrigger;
 
+    private SimpleWidget modifier;
+    private ShuffleboardTab tab;
+
+
     @Override
     public void init() {
         launcherMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.LAUNCHER_MOTOR);
@@ -41,6 +51,10 @@ public class Launcher implements Subsystem {
         trigger.addInputListener(this);
         readyTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
         readyTrigger.addInputListener(this);
+
+        tab = Shuffleboard.getTab("Tab");
+
+        modifier = tab.add("Flywheel Power", 0.4);
     }
 
     @Override
@@ -58,7 +72,7 @@ public class Launcher implements Subsystem {
 
         if (Math.abs(readyTrigger.getValue()) > 0.3) { //start this motor spinning before the ball is loaded
 
-            launcherSpeed = 0.4;
+            launcherSpeed = modifier.getEntry().getDouble(0);
 
             kickerSpeed = 1;
 
