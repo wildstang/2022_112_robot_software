@@ -1,5 +1,7 @@
 package org.wildstang.year2022.subsystems;
 
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
@@ -7,6 +9,8 @@ import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSOutputs;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.wildstang.year2022.robot.WSInputs;
 
@@ -77,6 +81,8 @@ public class Tester implements Subsystem {
 
         //climbRotateMotor.setSpeed(climbRotateSpeed);
         //climbLiftMotor.setSpeed(climbLiftSpeed);    
+
+        SmartDashboard.putNumber("hood MA3", hoodMotor.getController().getAnalog(Mode.kAbsolute).getVoltage());
     }
 
     @Override
