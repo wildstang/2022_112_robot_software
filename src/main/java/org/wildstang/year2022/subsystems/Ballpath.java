@@ -38,6 +38,7 @@ public class Ballpath implements Subsystem {
     Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+
     Ball_Gate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALL_GATE);
     Wheel.setCurrentLimit(25, 25, 0);
     Feed.setCurrentLimit(25, 25, 0);
@@ -140,6 +141,7 @@ public void update(){
     SmartDashboard.putNumber("Feed", feedSpeed);
     SmartDashboard.putNumber("Gate", gateSpeed);
 
+
 }
 
 @Override
@@ -157,6 +159,20 @@ public void resetState() {
   feedState = feedStates.off;
   wheelState = wheelStates.off;
 }
+
+public void startBallpath(){
+    intakeDeploy = true;
+    wheelSpeed = 1;
+    feedSpeed = 1;
+    gateSpeed = 1;
+}
+public void stopBallpath(){
+    intakeDeploy = false;
+    wheelSpeed = 0;
+    feedSpeed = 0;
+    gateSpeed = 0;
+}
+
 
 @Override
 public String getName(){

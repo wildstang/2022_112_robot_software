@@ -32,6 +32,7 @@ public enum WSOutputs implements Outputs {
     
     ARM_WHEEL("Intake Wheel Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
     FEED("Feed Motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
+
     BALL_GATE("Ball Gate", new WsSparkMaxConfig(CANConstants.BALL_GATE, true)),
    
     LAUNCHER_MOTOR("Launcher Motor", new WsSparkMaxConfig(CANConstants.SHOOTER, true)),
