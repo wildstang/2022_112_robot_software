@@ -22,7 +22,7 @@ public class Drive extends PathFollowingDrive {
 
     private WsSparkMax left, right;
     private WsJoystickAxis throttleJoystick, headingJoystick;
-    private WsJoystickButton baseLock, gyroReset;
+    private WsJoystickButton baseLock, gyroReset, turnSlow;
     private AnalogInput rightTrigger, leftTrigger;
     private DriveState state;
 
@@ -55,6 +55,8 @@ public class Drive extends PathFollowingDrive {
         baseLock.addInputListener(this);
         gyroReset = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         gyroReset.addInputListener(this);
+        turnSlow = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_LEFT);
+        turnSlow.addInputListener(this);
         rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
         rightTrigger.addInputListener(this);
         leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
@@ -106,6 +108,10 @@ public class Drive extends PathFollowingDrive {
     public void inputUpdate(Input source) {
         // heading = -headingJoystick.getValue();
         heading = -headingJoystick.getValue() * Math.pow(Math.abs(headingJoystick.getValue()), headingJoystick.getValue());
+        heading = helper.handleDeadband(heading, 0.15);
+        if (turnSlow.getValue()){
+            heading *= 0.2;
+        }
         // throttle = -throttleJoystick.getValue();
        // throttle = -throttleJoystick.getValue() * Math.abs(throttleJoystick.getValue());
        //throttle = -getTriggerThrottle();
@@ -121,6 +127,7 @@ public class Drive extends PathFollowingDrive {
             //gyro.reset();
             //gyro.setAngleAdjustment(0.0);
         }
+
 
     }
 
