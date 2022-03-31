@@ -32,12 +32,14 @@ import edu.wpi.first.wpilibj.I2C;
 
 public class Ballpath implements Subsystem{
     
+
     private DigitalInput Abutton, Ybutton, Xbutton;
     private AnalogInput Trigger;
     private WsSparkMax Wheel, Feed, Ball_Gate;
     private WsSolenoid Intake, Intake2;
     private boolean intakeDeploy;
-    private double feedSpeed, wheelSpeed;
+    private double feedSpeed, wheelSpeed, gateSpeed;
+
     private enum feedStates{
         up, out, off;
     }
@@ -54,6 +56,7 @@ public class Ballpath implements Subsystem{
     Intake2 = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FOLLOWER);
     Wheel = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM_WHEEL);
     Feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
+
     Ball_Gate = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.BALL_GATE);
     Wheel.setCurrentLimit(25, 25, 0);
     Feed.setCurrentLimit(25, 25, 0);
@@ -63,6 +66,7 @@ public class Ballpath implements Subsystem{
          Abutton.addInputListener(this);
     Xbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
          Xbutton.addInputListener(this);
+
     Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
          Ybutton.addInputListener(this);
     Trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
@@ -75,31 +79,48 @@ public class Ballpath implements Subsystem{
 @Override
 public void inputUpdate(Input source){
 
+
+    if (Trigger.getValue() > 0.25){
+       gateSpeed = 1;
+    }    
+    else {
+        gateSpeed = 0;
+    }
+
+
     if (Abutton.getValue()){
 
         intakeDeploy = true;
         wheelState = wheelStates.forward;
-    } else {
-        intakeDeploy = false;
-        wheelState = wheelStates.off;
-    }
-
-
-    if (Ybutton.getValue()){
-        
-        feedState = feedStates.out;
-    } else if (Xbutton.getValue() || Math.abs(Trigger.getValue()) > 0.15){
         feedState = feedStates.up;
-    } else {
+
+    }
+    else if (Ybutton.getValue()){
+        
+        intakeDeploy = true;
+        wheelState = wheelStates.backward;
+        feedState = feedStates.out;
+    }
+    else if (Xbutton.getValue()){
+
+        feedState = feedStates.up;
+        intakeDeploy = false;
+        wheelState = wheelStates.off; 
+
+    }
+    else {
+        intakeDeploy = false;
         feedState = feedStates.off;
+        wheelState = wheelStates.off;
+
     }
 
     if(feedState == feedStates.up){
-        feedSpeed = 1;
+        feedSpeed = -1;
     }
 
     if(feedState == feedStates.out){
-        feedSpeed = -1;
+        feedSpeed = 1;
     }
 
     if(feedState == feedStates.off){
@@ -127,8 +148,9 @@ public void update(){
     Wheel.setSpeed(wheelSpeed);
     Intake.setValue(intakeDeploy);
     Intake2.setValue(intakeDeploy);
-
+    Ball_Gate.setSpeed(gateSpeed);
     SmartDashboard.putNumber("Intake", wheelSpeed);
+
 
 }
 
@@ -141,11 +163,26 @@ public void selfTest(){
 public void resetState() {
 
   feedSpeed = 0;
-  wheelSpeed= 0;
+  wheelSpeed = 0;
+  gateSpeed = 0;
   intakeDeploy = false;
   feedState = feedStates.off;
   wheelState = wheelStates.off;
 }
+
+public void startBallpath(){
+    intakeDeploy = true;
+    wheelSpeed = 1;
+    feedSpeed = 1;
+    gateSpeed = 1;
+}
+public void stopBallpath(){
+    intakeDeploy = false;
+    wheelSpeed = 0;
+    feedSpeed = 0;
+    gateSpeed = 0;
+}
+
 
 @Override
 public String getName(){
