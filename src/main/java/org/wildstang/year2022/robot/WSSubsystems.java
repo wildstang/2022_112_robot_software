@@ -5,7 +5,7 @@ import org.wildstang.year2022.subsystems.Launcher;
 import org.wildstang.year2022.subsystems.drive.Drive;
 
 import org.wildstang.year2022.subsystems.climb.Climb;
-
+import org.wildstang.year2022.subsystems.AimHelper;
 import org.wildstang.year2022.subsystems.Ballpath;
 import org.wildstang.year2022.subsystems.Tester;
 
@@ -17,6 +17,7 @@ import org.wildstang.year2022.subsystems.Tester;
 public enum WSSubsystems implements Subsystems {
 
     // enumerate subsystems
+    LIMELIGHT("Limelight", AimHelper.class),
     DRIVE("Drive", Drive.class),
 
     CLIMB("Climb", Climb.class),

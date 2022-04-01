@@ -12,6 +12,9 @@ import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
+import org.wildstang.year2022.robot.WSSubsystems;
+import org.wildstang.year2022.subsystems.AimHelper;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.I2C;
@@ -23,7 +26,7 @@ public class Drive extends PathFollowingDrive {
 
     private WsSparkMax left, right;
     private WsJoystickAxis throttleJoystick, headingJoystick;
-    private WsJoystickButton baseLock, gyroReset;
+    private WsJoystickButton baseLock, gyroReset, aButton;
     private WsDPadButton turnSlow;
     private AnalogInput rightTrigger, leftTrigger;
     private DriveState state;
@@ -32,6 +35,7 @@ public class Drive extends PathFollowingDrive {
     private double throttle;
     private double backThrottle;
     private DriveSignal signal;
+    private AimHelper limelight;
 
     private WSDriveHelper helper = new WSDriveHelper();
     //private final AHRS gyro = new AHRS(SerialPort.Port.kOnboard);
@@ -63,6 +67,9 @@ public class Drive extends PathFollowingDrive {
         rightTrigger.addInputListener(this);
         leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
         leftTrigger.addInputListener(this);
+        aButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
+        aButton.addInputListener(this);
+        limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.LIMELIGHT);
         resetState();
     }
 
@@ -88,6 +95,7 @@ public class Drive extends PathFollowingDrive {
         SmartDashboard.putString("drive state",state.toString());
         SmartDashboard.putNumber("drive throttle", throttle);
         SmartDashboard.putNumber("drive back throttle", backThrottle);
+        SmartDashboard.putNumber("Limelight Distance", limelight.getDistance());
     }
 
     @Override
@@ -128,6 +136,10 @@ public class Drive extends PathFollowingDrive {
         if (source == gyroReset && gyroReset.getValue()){
             //gyro.reset();
             //gyro.setAngleAdjustment(0.0);
+        }
+        if (aButton.getValue()){
+            heading = limelight.getRotPID();
+
         }
 
 
