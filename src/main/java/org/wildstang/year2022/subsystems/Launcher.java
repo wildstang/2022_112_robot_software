@@ -47,8 +47,8 @@ public class Launcher implements Subsystem {
     //private ShuffleboardTab tab;
 
     private final double REG_A = 0.000580;
-    private final double REG_B = -0.0008214;
-    private final double REG_C = 0.386;
+    private final double REG_B = -0.0008214 + 0.08/16;
+    private final double REG_C = 0.386 - 0.02;
 
     private AimHelper limelight;
 
