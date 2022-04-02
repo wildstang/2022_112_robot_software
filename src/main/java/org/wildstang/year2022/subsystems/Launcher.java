@@ -96,6 +96,12 @@ public class Launcher implements Subsystem {
 
     }
 
+    public void launcherOn(){
+
+        launcherMotor.setSpeed(-launcherSpeed);
+        
+    }
+
     @Override
     public String getName() {
         return "Launcher";
