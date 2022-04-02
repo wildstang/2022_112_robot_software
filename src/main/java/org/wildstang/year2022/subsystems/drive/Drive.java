@@ -37,6 +37,8 @@ public class Drive extends PathFollowingDrive {
     private DriveSignal signal;
     private AimHelper limelight;
 
+    private boolean isAiming;
+
     private WSDriveHelper helper = new WSDriveHelper();
     //private final AHRS gyro = new AHRS(SerialPort.Port.kOnboard);
 
@@ -80,6 +82,9 @@ public class Drive extends PathFollowingDrive {
 
     @Override
     public void update() {
+        if (isAiming){
+            heading = limelight.getRotPID();
+        }
         if (state == DriveState.TELEOP){
             //if (Math.abs(rightTrigger.getValue()) < 0.15 && Math.abs(leftTrigger.getValue()) < 0.15) throttle = 0;
             if (Math.abs(throttle) < Math.abs(backThrottle)){
@@ -107,6 +112,7 @@ public class Drive extends PathFollowingDrive {
         signal = new DriveSignal(0.0, 0.0);
         setBrakeMode(false);
         //gyro.reset();
+        isAiming = false;
     }
 
     @Override
@@ -137,10 +143,7 @@ public class Drive extends PathFollowingDrive {
             //gyro.reset();
             //gyro.setAngleAdjustment(0.0);
         }
-        if (aButton.getValue()){
-            heading = limelight.getRotPID();
-
-        }
+        isAiming = aButton.getValue();
 
 
     }

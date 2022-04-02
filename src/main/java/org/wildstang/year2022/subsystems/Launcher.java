@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.wildstang.hardware.roborio.outputs.WsSolenoid;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
@@ -35,13 +36,15 @@ public class Launcher implements Subsystem {
     //WsSolenoid cargoHatchSolenoid;
     boolean solenoidActive;
     private boolean aiming;
+
+    private double preset;
     
     //Trigger
     AnalogInput trigger, readyTrigger;
-    private DigitalInput aButton;
+    private DigitalInput aButton, leftBumper, rightBumper;
 
-    private SimpleWidget modifier;
-    private ShuffleboardTab tab;
+    //private SimpleWidget modifier;
+    //private ShuffleboardTab tab;
 
     private final double REG_A = 0.000580;
     private final double REG_B = -0.0008214;
@@ -63,11 +66,15 @@ public class Launcher implements Subsystem {
         readyTrigger.addInputListener(this);
         aButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
         aButton.addInputListener(this);
+        leftBumper = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_SHOULDER);
+        leftBumper.addInputListener(this);
+        rightBumper = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_SHOULDER);
+        rightBumper.addInputListener(this);
         limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.LIMELIGHT);
 
-        tab = Shuffleboard.getTab("Tab");
+        //tab = Shuffleboard.getTab("Tab");
 
-        modifier = tab.add("Flywheel Power", 0.4);
+        //modifier = tab.add("Flywheel Power", 0.4);
     }
 
     @Override
@@ -85,14 +92,26 @@ public class Launcher implements Subsystem {
         kickerMotor.setSpeed(kickerSpeed);
         launcherMotor.setSpeed(-launcherSpeed);
 
+        SmartDashboard.putNumber("flywheel preset", preset);
+        SmartDashboard.putNumber("flywheel speed", launcherSpeed);
+
     }
     
     @Override
     public void inputUpdate(Input source) {
 
+        if (leftBumper.getValue() && rightBumper.getValue()){
+            preset = 0.45;
+        } else if (source == leftBumper && leftBumper.getValue() && !rightBumper.getValue()){
+            preset = 0.4;
+        } else if (source == rightBumper && rightBumper.getValue() && !leftBumper.getValue()){
+            preset = 0.55;
+        }
+
         if (Math.abs(readyTrigger.getValue()) > 0.3) { //start this motor spinning before the ball is loaded
 
-            launcherSpeed = modifier.getEntry().getDouble(0);
+            //launcherSpeed = modifier.getEntry().getDouble(0);
+            launcherSpeed = preset;
 
             kickerSpeed = 1;
 
@@ -128,6 +147,8 @@ public class Launcher implements Subsystem {
         //solenoidActive = false;
 
         launcherSpeed = 0;
+
+        preset = 0.4;
 
     }
 

@@ -27,9 +27,9 @@ public class hood implements Subsystem {
     
 
     double position = 0;
-    double p1 = 0;
-    double p2 = 1;
-    double p3 = 2;
+    double p1 = 0.94;
+    double p2 = 2.09;
+    double p3 = 1.91;
 
     private final double REG_A = -0.0038393;
     private final double REG_B = 0.17336;
@@ -58,6 +58,7 @@ public class hood implements Subsystem {
         setPosition(position);
         
         SmartDashboard.putNumber("hood MA3", hood_Motor.getController().getAnalog(Mode.kAbsolute).getVoltage());
+        SmartDashboard.putNumber("hood target", position);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class hood implements Subsystem {
 
     @Override
     public void resetState() {
-        position = 0;
+        position = getMA3();
         hood_Motor.resetEncoder();
         
     }
@@ -107,7 +108,7 @@ public class hood implements Subsystem {
     public void setPosition(double target){
         double pidSpeed = 0;
         if (target*.99 > getMA3() || target*1.01<getMA3()){
-            pidSpeed = -2.8 * (target - getMA3());
+            pidSpeed = -1.4 * (target - getMA3());
             pidSpeed += Math.signum(pidSpeed) * 0.024;
         }
         if ((pidSpeed < 0 && getMA3()>2.39) || (pidSpeed > 0 && getMA3() < 0.94)) hood_Motor.setSpeed(0);

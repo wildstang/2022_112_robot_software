@@ -77,8 +77,8 @@ public class AimHelper implements Subsystem{
     }
     public double getDistance(){
         calcTargetCoords();
-        TargetDistance = (modifier*12) + 48 + (TARGET_HEIGHT-CAMERA_HEIGHT) / Math.tan(Math.toRadians(ty.getDouble(0) + CAMERA_ANGLE));
-        return TargetDistance;
+        TargetDistance = (modifier*12) + 32 + (TARGET_HEIGHT-CAMERA_HEIGHT) / Math.tan(Math.toRadians(ty.getDouble(0) + CAMERA_ANGLE));
+        return TargetDistance/12;
     }
     
     public double getRotPID(){
@@ -91,8 +91,8 @@ public class AimHelper implements Subsystem{
             ledModeEntry.setNumber(0);//turn led on
             llModeEntry.setNumber(0);//turn camera to vision tracking
         } else {
-            ledModeEntry.setNumber(1);//turn led off
-            llModeEntry.setNumber(1);//turn camera to normal color mode
+            ledModeEntry.setNumber(0);//turn led off
+            llModeEntry.setNumber(0);//turn camera to normal color mode
         }
     }
     @Override
