@@ -8,6 +8,7 @@ import org.wildstang.year2022.subsystems.climb.Climb;
 import org.wildstang.year2022.subsystems.AimHelper;
 import org.wildstang.year2022.subsystems.Ballpath;
 import org.wildstang.year2022.subsystems.Tester;
+import org.wildstang.year2022.subsystems.hood;
 
 
 /**
@@ -24,7 +25,8 @@ public enum WSSubsystems implements Subsystems {
 
     BALLPATH("Ballpath", Ballpath.class),
     LAUNCHER("Launcher", Launcher.class),
-    TESTER("Tester", Tester.class)
+    //TESTER("Tester", Tester.class)
+    HOOD("Hood", hood.class)
 
     ;
 

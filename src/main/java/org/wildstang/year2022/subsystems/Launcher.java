@@ -2,10 +2,12 @@ package org.wildstang.year2022.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.year2022.robot.WSInputs;
 import org.wildstang.year2022.robot.WSOutputs;
+import org.wildstang.year2022.robot.WSSubsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -32,12 +34,20 @@ public class Launcher implements Subsystem {
     //Cargo Hatch Solenoid
     //WsSolenoid cargoHatchSolenoid;
     boolean solenoidActive;
+    private boolean aiming;
     
     //Trigger
     AnalogInput trigger, readyTrigger;
+    private DigitalInput aButton;
 
     private SimpleWidget modifier;
     private ShuffleboardTab tab;
+
+    private final double REG_A = 0.000580;
+    private final double REG_B = -0.0008214;
+    private final double REG_C = 0.386;
+
+    private AimHelper limelight;
 
 
     @Override
@@ -51,6 +61,9 @@ public class Launcher implements Subsystem {
         trigger.addInputListener(this);
         readyTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
         readyTrigger.addInputListener(this);
+        aButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
+        aButton.addInputListener(this);
+        limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.LIMELIGHT);
 
         tab = Shuffleboard.getTab("Tab");
 
@@ -62,6 +75,13 @@ public class Launcher implements Subsystem {
         
         //update outputs based on variable values
         //cargoHatchSolenoid.setValue(solenoidActive);
+        if (aiming){
+
+            double dist = limelight.getDistance();
+            launcherSpeed = dist*dist*REG_A + dist*REG_B + REG_C;
+            kickerSpeed = 1;
+
+        } 
         kickerMotor.setSpeed(kickerSpeed);
         launcherMotor.setSpeed(-launcherSpeed);
 
@@ -83,6 +103,7 @@ public class Launcher implements Subsystem {
             kickerSpeed = 0;
 
         }
+        aiming = aButton.getValue();
         // if (Math.abs(trigger.getValue()) > 0.5) {
     
         //     solenoidActive = true;
