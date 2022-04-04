@@ -37,8 +37,8 @@ public class Climb implements Subsystem{
     private AnalogInput raise, rotate;
     private double raiseValue, rotateValue;
 
-    private final double RAISE_SPEED = 1.0;
-    private final double ROTATE_SPEED = 0.5;
+    private final double RAISE_SPEED = -1.0;
+    private final double ROTATE_SPEED = -0.5;
 
     @Override
     public void init(){
