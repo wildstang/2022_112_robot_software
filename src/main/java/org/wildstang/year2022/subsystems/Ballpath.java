@@ -90,7 +90,7 @@ public class Ballpath implements Subsystem {
 
         } else if (source == trigger) {
 
-            ballgateSpeed = trigger.getValue()
+            ballgateSpeed = trigger.getValue();
 
         }
 
