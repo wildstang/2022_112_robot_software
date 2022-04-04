@@ -152,6 +152,12 @@ public class Launcher implements Subsystem {
 
     }
 
+    public void launcherOn(){
+
+        launcherSpeed = 0.4;
+        
+    }
+
     @Override
     public String getName() {
         return "Launcher";
