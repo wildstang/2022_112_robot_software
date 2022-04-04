@@ -98,7 +98,7 @@ public class Launcher implements Subsystem {
 
     public void launcherOn(){
 
-        launcherMotor.setSpeed(-launcherSpeed);
+        launcherSpeed = 0.4;
         
     }
 
