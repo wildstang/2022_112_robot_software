@@ -164,13 +164,20 @@ public void startBallpath(){
     intakeDeploy = true;
     wheelSpeed = 1;
     feedSpeed = 1;
-    gateSpeed = 1;
+    //gateSpeed = 1;
 }
 public void stopBallpath(){
     intakeDeploy = false;
     wheelSpeed = 0;
     feedSpeed = 0;
-    gateSpeed = 0;
+    //gateSpeed = 0;
+}
+public void fire(boolean firing){
+    if (firing){
+        feedSpeed = 1;
+    } else {
+        feedSpeed = 0;
+    }
 }
 
 

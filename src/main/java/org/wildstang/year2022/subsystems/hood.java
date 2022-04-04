@@ -114,4 +114,8 @@ public class hood implements Subsystem {
         if ((pidSpeed < 0 && getMA3()>2.39) || (pidSpeed > 0 && getMA3() < 0.94)) hood_Motor.setSpeed(0);
         else hood_Motor.setSpeed(pidSpeed);
     }
+    public void limelightHood(){
+        double dist = limelight.getDistance();
+        position = dist*dist*REG_A + dist*REG_B + REG_C;
+    }
 }

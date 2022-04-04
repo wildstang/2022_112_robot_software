@@ -156,4 +156,7 @@ public class Launcher implements Subsystem {
     public String getName() {
         return "Launcher";
     }
+    public void setAiming(boolean isAiming){
+        aiming = isAiming;
+    }
 }

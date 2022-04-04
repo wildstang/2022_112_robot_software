@@ -2,7 +2,10 @@ package org.wildstang.year2022.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
+import org.wildstang.year2022.auto.steps.AutoDriveStep;
 import org.wildstang.year2022.auto.steps.DeployIntakeStep;
+import org.wildstang.year2022.auto.steps.FireStep;
+import org.wildstang.year2022.auto.steps.LimelightStep;
 
 public class TwoBall extends AutoProgram{
 
@@ -13,10 +16,26 @@ public class TwoBall extends AutoProgram{
         //wait like 0.5 sec
         addStep(new AutoStepDelay(500));
         //drive backwards at like 30% power for 2 seconds
+        addStep(new AutoDriveStep(2.0));
         //activate limelight
+        addStep(new LimelightStep(true));
         //wait like 1 sec
         addStep(new AutoStepDelay(1000));
         //turn on ball gate motor
+        addStep(new FireStep(true));
+        addStep(new AutoStepDelay(2000));
+
+        // //optional 4 ball addition
+        // //turn off firing and limelight
+        // addStep(new FireStep(false));
+        // addStep(new LimelightStep(false));
+        // //turn robot to angle
+        // //drive backwards
+        // //drive forwards
+        // //activate limelight, wait 0.5 sec
+        // addStep(new LimelightStep(true));
+        // //fire
+        // addStep(new FireStep(true));
 
     }
 
