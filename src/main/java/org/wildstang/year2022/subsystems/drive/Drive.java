@@ -34,7 +34,8 @@ public class Drive extends PathFollowingDrive {
     private double heading;
     private double throttle;
     private double backThrottle;
-    private double autoDrivePower;
+    private double autoDriveLeft;
+    private double autoDriveRight;
     private DriveSignal signal;
     private AimHelper limelight;
 
@@ -98,8 +99,8 @@ public class Drive extends PathFollowingDrive {
             left.setPosition(left.getPosition());
             right.setPosition(right.getPosition());
         } else if (state == DriveState.AUTO){
-            left.setSpeed(INVERT * autoDrivePower);
-            right.setSpeed(autoDrivePower);
+            left.setSpeed(INVERT * autoDriveLeft);
+            right.setSpeed(autoDriveRight);
         }
         SmartDashboard.putString("drive state",state.toString());
         SmartDashboard.putNumber("drive throttle", throttle);
@@ -117,7 +118,8 @@ public class Drive extends PathFollowingDrive {
         setBrakeMode(false);
         //gyro.reset();
         isAiming = false;
-        autoDrivePower = 0;
+        autoDriveLeft = 0;
+        autoDriveRight = 0;
     }
 
     @Override
@@ -206,7 +208,12 @@ public class Drive extends PathFollowingDrive {
         //gyro.setAngleAdjustment(degrees);
     }
     public void setAutoDrive(double autoDrive){
-        autoDrivePower = autoDrive;
+        autoDriveLeft = autoDrive;
+        autoDriveRight = autoDrive;
+    }
+    public void setAutoRotate(double autoRotate){
+        autoDriveLeft = autoRotate;
+        autoDriveRight = -autoRotate;
     }
 
     private double getTriggerThrottle(){

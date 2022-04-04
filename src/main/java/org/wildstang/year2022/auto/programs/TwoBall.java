@@ -16,7 +16,7 @@ public class TwoBall extends AutoProgram{
         //wait like 0.5 sec
         addStep(new AutoStepDelay(500));
         //drive backwards at like 30% power for 2 seconds
-        addStep(new AutoDriveStep(2.0));
+        addStep(new AutoDriveStep(2.0, true));
         //activate limelight
         addStep(new LimelightStep(true));
         //wait like 1 sec
@@ -30,8 +30,12 @@ public class TwoBall extends AutoProgram{
         // addStep(new FireStep(false));
         // addStep(new LimelightStep(false));
         // //turn robot to angle
+        // addStep(new AutoRotateStep(0.2, true));
         // //drive backwards
+        // addStep(new AutoDriveStep(4.0, true));
+        // addStep(new AutoStepDelay(1000));
         // //drive forwards
+        // addStep(new AutoDriveStep(4.0, false));
         // //activate limelight, wait 0.5 sec
         // addStep(new LimelightStep(true));
         // //fire

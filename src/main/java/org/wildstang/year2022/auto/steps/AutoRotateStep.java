@@ -7,16 +7,16 @@ import org.wildstang.year2022.subsystems.drive.Drive;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class AutoDriveStep extends AutoStep {
+public class AutoRotateStep extends AutoStep {
 
     private Drive drive;
     private double time;
     private Timer timer;
-    private boolean directionOfMotion;
+    private boolean direction;
 
-    public AutoDriveStep(double timeInSec, boolean direction){
+    public AutoRotateStep(double timeInSec, boolean directionOfRot){
         this.time = timeInSec;
-        directionOfMotion = direction;
+        direction = directionOfRot;
     }
     public void initialize(){
         timer = new Timer();
@@ -24,8 +24,8 @@ public class AutoDriveStep extends AutoStep {
         drive = (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE);
     }
     public void update(){
-        if (directionOfMotion) drive.setAutoDrive(0.3);
-        else drive.setAutoDrive(-0.3);
+        if (direction) drive.setAutoRotate(0.1);
+        else drive.setAutoRotate(-0.1);
         if (timer.hasElapsed(time)){
             drive.setAutoDrive(0);
             setFinished();
