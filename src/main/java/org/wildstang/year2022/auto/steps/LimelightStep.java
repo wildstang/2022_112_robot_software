@@ -30,7 +30,7 @@ public class LimelightStep extends AutoStep{
     public void update() {
         limelight.turnOnLED(isOn);
         launcher.setAiming(isOn);
-        robotHood.limelightHood();
+        robotHood.limelightHood(isOn);
         setFinished();
     }
 

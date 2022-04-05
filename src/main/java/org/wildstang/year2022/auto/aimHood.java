@@ -20,7 +20,7 @@ public class aimHood extends AutoStep{
     @Override
     public void update(){
 
-        myHood.limelightHood();
+        myHood.limelightHood(true);
 
     }
 

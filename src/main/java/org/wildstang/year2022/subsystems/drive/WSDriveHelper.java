@@ -7,7 +7,7 @@ public class WSDriveHelper {
     public static final double DEADBAND = 0.15;
     private DriveSignal driveSignal = new DriveSignal(0, 0);
 
-    public DriveSignal teleopDrive(double throttle, double heading) {
+    public DriveSignal teleopDrive(double throttle, double heading, double thrust) {
 
         //heading = handleDeadband(heading, DEADBAND);
         throttle = handleDeadband(throttle, DEADBAND);
@@ -15,12 +15,12 @@ public class WSDriveHelper {
         double rightPwm = throttle - heading;
         double leftPwm = throttle + heading;
 
-        if (Math.abs(leftPwm) > 0.75){
+        if (Math.abs(leftPwm) > thrust){
             leftPwm /= Math.abs(leftPwm);
-            rightPwm -= Math.abs(leftPwm) - 0.75;
-        } else if (Math.abs(rightPwm) > 0.75){
+            rightPwm -= Math.abs(leftPwm) - thrust;
+        } else if (Math.abs(rightPwm) > thrust){
             rightPwm /= Math.abs(rightPwm);
-            leftPwm -= Math.abs(rightPwm) - 0.75;
+            leftPwm -= Math.abs(rightPwm) - thrust;
         }
 
         driveSignal.rightMotor = rightPwm;

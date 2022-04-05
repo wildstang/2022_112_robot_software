@@ -24,6 +24,8 @@ public class hood implements Subsystem {
     DigitalInput leftBumper;
     DigitalInput rightBumper;
     DigitalInput aButton;
+
+    private boolean isAiming;
     
 
     double position = 0;
@@ -55,6 +57,10 @@ public class hood implements Subsystem {
 
     @Override
     public void update() {
+        if (isAiming){
+            double dist = limelight.getDistance();
+            position = dist*dist*REG_A + dist*REG_B + REG_C;
+        }
         setPosition(position);
         
         SmartDashboard.putNumber("hood MA3", hood_Motor.getController().getAnalog(Mode.kAbsolute).getVoltage());
@@ -80,10 +86,7 @@ public class hood implements Subsystem {
         if ((source == leftBumper || source == rightBumper) && (leftBumper.getValue() && rightBumper.getValue())){
             position = p3;
         }
-        if (aButton.getValue()){
-            double dist = limelight.getDistance();
-            position = dist*dist*REG_A + dist*REG_B + REG_C;//Put the aim regression with the limelight distance here
-        }
+        isAiming = aButton.getValue();
     } 
 
     @Override
@@ -95,6 +98,7 @@ public class hood implements Subsystem {
     public void resetState() {
         position = getMA3();
         hood_Motor.resetEncoder();
+        isAiming = false;
         
     }
 
@@ -114,8 +118,7 @@ public class hood implements Subsystem {
         if ((pidSpeed < 0 && getMA3()>2.39) || (pidSpeed > 0 && getMA3() < 0.94)) hood_Motor.setSpeed(0);
         else hood_Motor.setSpeed(pidSpeed);
     }
-    public void limelightHood(){
-        double dist = limelight.getDistance();
-        position = dist*dist*REG_A + dist*REG_B + REG_C;
+    public void limelightHood(boolean isOn){
+        isAiming = isOn;
     }
 }

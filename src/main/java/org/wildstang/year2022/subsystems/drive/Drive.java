@@ -33,6 +33,7 @@ public class Drive extends PathFollowingDrive {
 
     private double heading;
     private double throttle;
+    private double thrust;
     private double backThrottle;
     private double autoDriveLeft;
     private double autoDriveRight;
@@ -90,9 +91,9 @@ public class Drive extends PathFollowingDrive {
         if (state == DriveState.TELEOP){
             //if (Math.abs(rightTrigger.getValue()) < 0.15 && Math.abs(leftTrigger.getValue()) < 0.15) throttle = 0;
             if (Math.abs(throttle) < Math.abs(backThrottle)){
-                signal = helper.teleopDrive(0.75*backThrottle, 0.5*heading);
+                signal = helper.teleopDrive(thrust*backThrottle, 0.5*heading, thrust);
             } else {
-                signal = helper.teleopDrive(0.75*throttle, 0.5*heading);
+                signal = helper.teleopDrive(thrust*throttle, 0.5*heading, thrust);
             }
             drive(signal);
         } else if (state == DriveState.BASELOCK){
@@ -120,6 +121,7 @@ public class Drive extends PathFollowingDrive {
         isAiming = false;
         autoDriveLeft = 0;
         autoDriveRight = 0;
+        thrust = 0.75;
     }
 
     @Override
@@ -151,6 +153,14 @@ public class Drive extends PathFollowingDrive {
             //gyro.setAngleAdjustment(0.0);
         }
         isAiming = aButton.getValue();
+
+        if (throttleJoystick.getValue() < -0.25){
+            thrust = 0.5;
+        } else if (throttleJoystick.getValue() > 0.25){
+            thrust = 1.0;
+        } else {
+            thrust = 0.75;
+        }
 
 
     }
