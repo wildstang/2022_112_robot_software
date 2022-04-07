@@ -88,7 +88,7 @@ public class Launcher implements Subsystem {
             launcherSpeed = dist*dist*REG_A + dist*REG_B + REG_C;
             kickerSpeed = 1;
 
-        } 
+        }
         kickerMotor.setSpeed(kickerSpeed);
         launcherMotor.setSpeed(-launcherSpeed);
 
@@ -164,5 +164,10 @@ public class Launcher implements Subsystem {
     }
     public void setAiming(boolean isAiming){
         aiming = isAiming;
+        if (!aiming)
+        {
+            launcherSpeed = 0;
+            kickerSpeed = 0;
+        }
     }
 }
