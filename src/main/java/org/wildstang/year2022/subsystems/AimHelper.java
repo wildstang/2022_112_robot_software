@@ -116,6 +116,7 @@ public class AimHelper implements Subsystem{
         ledModeEntry = LimeTable.getEntry("ledMode");
         llModeEntry = LimeTable.getEntry("camMode");
 
+        modifier = 1;
 
         aButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
         aButton.addInputListener(this);
