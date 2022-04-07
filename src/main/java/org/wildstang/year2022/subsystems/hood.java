@@ -24,6 +24,7 @@ public class hood implements Subsystem {
     DigitalInput leftBumper;
     DigitalInput rightBumper;
     DigitalInput aButton;
+    AnalogInput raise;
 
     private boolean isAiming;
     
@@ -52,6 +53,9 @@ public class hood implements Subsystem {
         aButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_FACE_DOWN);
         aButton.addInputListener(this);
         limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.LIMELIGHT);
+        
+        raise = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
+        raise.addInputListener(this);
         resetState();
     }
 
@@ -78,6 +82,10 @@ public class hood implements Subsystem {
         //     }
         // }
         if (source == leftBumper && leftBumper.getValue()){
+            position = p1;
+        }
+        // lower hood on climb
+        if (source == raise && raise.getValue() > 0.2){
             position = p1;
         }
         if (source == rightBumper && rightBumper.getValue()){
