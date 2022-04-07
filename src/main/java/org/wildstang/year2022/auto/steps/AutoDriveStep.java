@@ -22,6 +22,7 @@ public class AutoDriveStep extends AutoStep {
         timer = new Timer();
         timer.start();
         drive = (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE);
+        drive.startPathFollower();
     }
     public void update(){
         if (directionOfMotion) drive.setAutoDrive(0.3);
@@ -29,6 +30,7 @@ public class AutoDriveStep extends AutoStep {
         if (timer.hasElapsed(time)){
             drive.setAutoDrive(0);
             setFinished();
+            drive.resetState();
         }
     }
     public String toString(){
