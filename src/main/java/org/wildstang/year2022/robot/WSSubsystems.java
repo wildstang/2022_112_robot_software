@@ -26,7 +26,7 @@ public enum WSSubsystems implements Subsystems {
     BALLPATH("Ballpath", Ballpath.class),
     LAUNCHER("Launcher", Launcher.class),
     //TESTER("Tester", Tester.class)
-    HOOD("Hood", hood.class)
+    HOOD("hood", hood.class)
 
     ;
 
