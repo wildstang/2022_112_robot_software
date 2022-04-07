@@ -29,8 +29,6 @@ public final class CANConstants {
 
     public static final int CLIMBER = 28;
     public static final int CLIMBER_FOLLOWER = 29;
-    public static final int CLIMBER_ROTATE = 26;
-    public static final int CLIMBER_ROTATE_FOLLOWER = 27;
 
     public static final int BALL_GATE = 21;
 

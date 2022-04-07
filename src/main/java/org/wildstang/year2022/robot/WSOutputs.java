@@ -45,9 +45,6 @@ public enum WSOutputs implements Outputs {
 
     CLIMB_LIFT("Climb Lift Motor", new WsSparkMaxConfig(CANConstants.CLIMBER, true)),
     CLIMB_LIFT_FOLLOWER("Climb Lift Follower", new WsSparkMaxFollowerConfig("Climb Lift Motor", CANConstants.CLIMBER_FOLLOWER, true, true)),
-    CLIMB_ROTATE("Climb Rotate Motor", new WsSparkMaxConfig(CANConstants.CLIMBER_ROTATE, true)),
-    CLIMB_ROTATE_FOLLOWER("Climb Rotate Follower", new WsSparkMaxFollowerConfig("Climb Rotate Motor", CANConstants.CLIMBER_ROTATE_FOLLOWER, true, true)),
-
     
     // ---------------------------------
     // Servos
