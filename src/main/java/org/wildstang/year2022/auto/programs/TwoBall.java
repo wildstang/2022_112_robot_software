@@ -16,14 +16,17 @@ public class TwoBall extends AutoProgram{
         //wait like 0.5 sec
         addStep(new AutoStepDelay(500));
         //drive backwards at like 30% power for 2 seconds
-        addStep(new AutoDriveStep(2.0, true));
+        addStep(new AutoDriveStep(0.5, false));
         //activate limelight
         addStep(new LimelightStep(true));
         //wait like 1 sec
-        addStep(new AutoStepDelay(1000));
+        addStep(new AutoStepDelay(2000));
         //turn on ball gate motor
         addStep(new FireStep(true));
+        addStep(new DeployIntakeStep(false));
         addStep(new AutoStepDelay(2000));
+        addStep(new LimelightStep(false));
+        addStep(new FireStep(false));
 
         // //optional 4 ball addition
         // //turn off firing and limelight
