@@ -41,7 +41,7 @@ public class Launcher implements Subsystem {
     
     //Trigger
     AnalogInput trigger, readyTrigger;
-    private DigitalInput aButton, leftBumper, rightBumper;
+    private DigitalInput aButton, leftBumper, rightBumper, Ybutton;
 
     //private SimpleWidget modifier;
     //private ShuffleboardTab tab;
@@ -71,6 +71,8 @@ public class Launcher implements Subsystem {
         rightBumper = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_SHOULDER);
         rightBumper.addInputListener(this);
         limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.LIMELIGHT);
+        Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
+        Ybutton.addInputListener(this);
 
         //tab = Shuffleboard.getTab("Tab");
 
@@ -132,6 +134,12 @@ public class Launcher implements Subsystem {
         //     solenoidActive = false;
 
         // }
+
+        if (Ybutton.getValue())
+        {
+            launcherSpeed = -0.4;
+            kickerSpeed = -1;
+        }
     }
 
     @Override

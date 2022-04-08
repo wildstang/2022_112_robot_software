@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Ballpath implements Subsystem {
     
-    private DigitalInput Abutton, Bbutton, Xbutton;
+    private DigitalInput Abutton, Bbutton, Xbutton, Ybutton;
     private AnalogInput Trigger;
     private WsSparkMax Wheel, Feed, Ball_Gate;
     private WsSolenoid Intake, Intake2;
@@ -50,6 +50,8 @@ public class Ballpath implements Subsystem {
          Xbutton.addInputListener(this);
     Bbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT);
          Bbutton.addInputListener(this);
+    Ybutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
+         Ybutton.addInputListener(this);
     Trigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
          Trigger.addInputListener(this);
     
@@ -89,6 +91,15 @@ public void inputUpdate(Input source){
         intakeDeploy = false;
         wheelState = wheelStates.off;
         feedState = feedStates.up;
+
+    }
+
+    else if(Ybutton.getValue()){
+
+        intakeDeploy = true;
+        wheelState = wheelStates.backward;
+        feedState = feedStates.out;
+        gateSpeed = -1;
 
     }
 
