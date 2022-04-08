@@ -24,6 +24,10 @@ public class TwoBall extends AutoProgram{
         //turn on ball gate motor
         addStep(new FireStep(true));
         addStep(new DeployIntakeStep(false));
+        addStep(new AutoStepDelay(5000));
+        addStep(new DeployIntakeStep(true));
+        addStep(new AutoStepDelay(500));
+        addStep(new DeployIntakeStep(false));
         addStep(new AutoStepDelay(2000));
         addStep(new LimelightStep(false));
         addStep(new FireStep(false));
