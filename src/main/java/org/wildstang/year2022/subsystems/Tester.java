@@ -1,5 +1,7 @@
 package org.wildstang.year2022.subsystems;
 
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
@@ -7,6 +9,8 @@ import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2022.robot.WSOutputs;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.wildstang.year2022.robot.WSInputs;
 
@@ -20,7 +24,7 @@ public class Tester implements Subsystem {
     private double hoodSpeed, climbRotateSpeed, climbLiftSpeed;
     
     private final double hoodMaxSpeed = 0.1;
-    private final double climbMaxSpeed = 0.1;
+    private final double climbMaxSpeed = 0.5;
 
 
     @Override
@@ -33,13 +37,13 @@ public class Tester implements Subsystem {
             hoodSpeed = 0;
         }
 
-        if (Math.abs(leftStickY.getValue()) > 0.2) {
-            climbRotateSpeed = climbMaxSpeed * Math.signum(leftStickY.getValue());
+        if (Math.abs(rightStickY.getValue()) > 0.2) {
+            climbRotateSpeed = climbMaxSpeed * rightStickY.getValue();
         } else {
             climbRotateSpeed = 0;
         }
-        if (Math.abs(rightStickY.getValue()) > 0.2) {
-            climbLiftSpeed = rightStickY.getValue();//probably want this to be able to go more than 0.2 to lift the robot
+        if (Math.abs(leftStickY.getValue()) > 0.2) {
+            climbLiftSpeed = leftStickY.getValue();//probably want this to be able to go more than 0.2 to lift the robot
         } else {
             climbLiftSpeed = 0;
         }
@@ -61,6 +65,8 @@ public class Tester implements Subsystem {
         hoodMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.HOOD_MOTOR);
         
         hoodMotor.setCurrentLimit(15, 15, 0);
+        //climbLiftMotor.setCurrentLimit(50, 50, 0);
+        //climbRotateMotor.setCurrentLimit(50, 50, 0);
 
         resetState();
     }
@@ -75,6 +81,8 @@ public class Tester implements Subsystem {
 
         //climbRotateMotor.setSpeed(climbRotateSpeed);
         //climbLiftMotor.setSpeed(climbLiftSpeed);    
+
+        SmartDashboard.putNumber("hood MA3", hoodMotor.getController().getAnalog(Mode.kAbsolute).getVoltage());
     }
 
     @Override

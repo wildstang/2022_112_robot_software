@@ -22,7 +22,8 @@ public class WsSolenoid extends DigitalOutput {
     public WsSolenoid(String name, PneumaticsModuleType module, int channel1, boolean p_default) {
         super(name, p_default);
 
-        solenoid = new Solenoid(module, channel1);
+        // temporary for non-default pcm can id
+        solenoid = new Solenoid(16, module, channel1);
         solenoid.set(p_default);
 
     }

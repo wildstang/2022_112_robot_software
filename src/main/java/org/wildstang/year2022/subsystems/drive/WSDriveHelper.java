@@ -4,23 +4,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WSDriveHelper {
 
-    public static final double DEADBAND = 0.10;
+    public static final double DEADBAND = 0.15;
     private DriveSignal driveSignal = new DriveSignal(0, 0);
 
-    public DriveSignal teleopDrive(double throttle, double heading) {
+    public DriveSignal teleopDrive(double throttle, double heading, double thrust) {
 
-        heading = handleDeadband(heading, DEADBAND);
+        //heading = handleDeadband(heading, DEADBAND);
         throttle = handleDeadband(throttle, DEADBAND);
 
         double rightPwm = throttle - heading;
         double leftPwm = throttle + heading;
 
-        if (Math.abs(leftPwm) > 1.0){
+        if (Math.abs(leftPwm) > thrust){
             leftPwm /= Math.abs(leftPwm);
-            rightPwm -= Math.abs(leftPwm) - 1.0;
-        } else if (Math.abs(rightPwm) > 1.0){
+            rightPwm -= Math.abs(leftPwm) - thrust;
+        } else if (Math.abs(rightPwm) > thrust){
             rightPwm /= Math.abs(rightPwm);
-            leftPwm -= Math.abs(rightPwm) - 1.0;
+            leftPwm -= Math.abs(rightPwm) - thrust;
         }
 
         driveSignal.rightMotor = rightPwm;
@@ -33,7 +33,12 @@ public class WSDriveHelper {
     }
 
     public double handleDeadband(double val, double deadband) {
-        return (Math.abs(val) > Math.abs(deadband)) ? val : 0.0;
+        if (Math.abs(val) > Math.abs(deadband)){
+            return val - Math.signum(val)*deadband;
+        } else {
+            return 0;
+        }
+        //return (Math.abs(val) > Math.abs(deadband)) ? val : 0.0;
     }
 
     public static double limit(double v, double limit) {

@@ -3,8 +3,13 @@ package org.wildstang.year2022.robot;
 import org.wildstang.framework.core.Subsystems;
 import org.wildstang.year2022.subsystems.Launcher;
 import org.wildstang.year2022.subsystems.drive.Drive;
+
+import org.wildstang.year2022.subsystems.climb.Climb;
+import org.wildstang.year2022.subsystems.AimHelper;
 import org.wildstang.year2022.subsystems.Ballpath;
 import org.wildstang.year2022.subsystems.Tester;
+import org.wildstang.year2022.subsystems.hood;
+
 
 /**
  * All subsystems are enumerated here.
@@ -13,10 +18,16 @@ import org.wildstang.year2022.subsystems.Tester;
 public enum WSSubsystems implements Subsystems {
 
     // enumerate subsystems
+    LIMELIGHT("Limelight", AimHelper.class),
     DRIVE("Drive", Drive.class),
+
+    CLIMB("Climb", Climb.class),
+
     BALLPATH("Ballpath", Ballpath.class),
     LAUNCHER("Launcher", Launcher.class),
-    TESTER("Tester", Tester.class)
+    //TESTER("Tester", Tester.class)
+    HOOD("hood", hood.class)
+
     ;
 
     /**
